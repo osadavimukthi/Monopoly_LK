@@ -22,6 +22,20 @@ enum players
     opportunisticTrader,
 };
 
+enum squareType
+{
+    Start,
+    Property,
+    Railway,
+    Utility,
+    Tax,
+    Event,
+    Insurance,
+    Bank,
+    Jail,
+    FreeParking,
+    GoToJail
+};
 
 struct property
 {
@@ -53,6 +67,12 @@ struct player
     int hasLoan;
     int isInJail;
     int jailTurnCount;
+};
+
+struct square
+{
+    char name[20];
+    enum squareType type;
 };
 
 #endif 
