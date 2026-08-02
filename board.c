@@ -1,0 +1,112 @@
+#include <stdio.h>
+#include "types.h"
+
+
+
+void board(){
+    struct square board[40] = {
+        {"GO",                          Start, -1},
+        {"Pettah",                      Property, 0},
+        {"Community Development Fund",  CommunityFund, -1},
+        {"Maradana",                    Property, 1},
+        {"Income Tax",                  Tax, -1},
+        {"Colombo Fort Railway Station", Railway, -1},
+        {"Bambalapitiya",               Property, 2},
+        {"National Event Card",         Event, -1},
+        {"Wellawatte",                  Property, 3},
+        {"Mount Lavinia",               Property, 4},
+
+        {"Jail / Just Visiting",        Jail, -1},
+        {"Nugegoda",                    Property, 5},
+        {"Ceylon Electricity Board",    Utility, -1},
+        {"Maharagama",                  Property, 6},
+        {"Kottawa",                     Property, 7},
+        {"Kandy Railway Station",       Railway, -1},
+        {"Negombo",                     Property, 8},
+        {"Sri Lanka Insurance",         Insurance, -1},
+        {"Katunayake",                  Property, 9},
+        {"Ja-Ela",                      Property, 10},
+
+        {"Free Parking",                FreeParking, -1},
+        {"Kandy City",                  Property, 11},
+        {"National Event Card",         Event, -1},
+        {"Peradeniya",                  Property, 12},
+        {"Katugastota",                 Property, 13},
+        {"Galle Railway Station",       Railway, -1},
+        {"Galle Fort",                  Property, 14},
+        {"Unawatuna",                   Property, 15},
+        {"National Water Supply and Drainage Board", Utility, -1},
+        {"Hikkaduwa",                   Property, 16},
+
+        {"Go To Jail",                  GoToJail, -1},
+        {"Jaffna Town",                 Property, 17},
+        {"Nallur",                      Property, 18},
+        {"Ceylinco Insurance",          Insurance, -1},
+        {"Trincomalee",                 Property, 19},
+        {"Jaffna Railway Station",      Railway, -1},
+        {"National Event Card",         Event, -1},
+        {"Nuwara Eliya",                Property, 20},
+        {"Bank of Ceylon",              Bank, -1},
+        {"Galle Face",                  Property, 21}
+    };
+
+    struct property properties[22] = {
+        // Brown group — house 500, hotel 2000, mortgage 750
+        {"Pettah",        1,  Brown,     1500, 100,  100, 1500, 750,  500, 2000, -1, 0, 0, 0, 0},
+        {"Maradana",      3,  Brown,     1800, 120,  120, 1800, 750,  500, 2000, -1, 0, 0, 0, 0},
+
+        // Light Blue group — house 750, hotel 3000, mortgage 1250
+        {"Bambalapitiya", 6,  LightBlue, 2500, 180,  180, 2500, 1250, 750, 3000, -1, 0, 0, 0, 0},
+        {"Wellawatte",    8,  LightBlue, 2700, 200,  200, 2700, 1250, 750, 3000, -1, 0, 0, 0, 0},
+        {"Mount Lavinia", 9,  LightBlue, 3000, 220,  220, 3000, 1250, 750, 3000, -1, 0, 0, 0, 0},
+
+        // Pink group — house 1000, hotel 4000, mortgage 1750
+        {"Nugegoda",      11, Pink,      3500, 260,  260, 3500, 1750, 1000, 4000, -1, 0, 0, 0, 0},
+        {"Maharagama",    13, Pink,      3800, 280,  280, 3800, 1750, 1000, 4000, -1, 0, 0, 0, 0},
+        {"Kottawa",       14, Pink,      4000, 300,  300, 4000, 1750, 1000, 4000, -1, 0, 0, 0, 0},
+
+        // Orange group — house 1250, hotel 5000, mortgage 2250
+        {"Negombo",       16, Orange,    4500, 350,  350, 4500, 2250, 1250, 5000, -1, 0, 0, 0, 0},
+        {"Katunayake",    18, Orange,    4700, 370,  370, 4700, 2250, 1250, 5000, -1, 0, 0, 0, 0},
+        {"Ja-Ela",        19, Orange,    5000, 400,  400, 5000, 2250, 1250, 5000, -1, 0, 0, 0, 0},
+
+        // Red group — house 1500, hotel 6000, mortgage 2750
+        {"Kandy City",    21, Red,       5500, 450,  450, 5500, 2750, 1500, 6000, -1, 0, 0, 0, 0},
+        {"Peradeniya",    23, Red,       5800, 480,  480, 5800, 2750, 1500, 6000, -1, 0, 0, 0, 0},
+        {"Katugastota",   24, Red,       6000, 500,  500, 6000, 2750, 1500, 6000, -1, 0, 0, 0, 0},
+
+        // Yellow group — house 2000, hotel 8000, mortgage 3250
+        {"Galle Fort",    26, Yellow,    6500, 600,  600, 6500, 3250, 2000, 8000, -1, 0, 0, 0, 0},
+        {"Unawatuna",     27, Yellow,    6800, 620,  620, 6800, 3250, 2000, 8000, -1, 0, 0, 0, 0},
+        {"Hikkaduwa",     29, Yellow,    7000, 650,  650, 7000, 3250, 2000, 8000, -1, 0, 0, 0, 0},
+
+        // Green group — house 2500, hotel 10000, mortgage 4000
+        {"Jaffna Town",   31, Green,     8000, 750,  750, 8000, 4000, 2500, 10000, -1, 0, 0, 0, 0},
+        {"Nallur",        32, Green,     8300, 780,  780, 8300, 4000, 2500, 10000, -1, 0, 0, 0, 0},
+        {"Trincomalee",   34, Green,     8500, 800,  800, 8500, 4000, 2500, 10000, -1, 0, 0, 0, 0},
+
+        // Dark Blue group — house 3000, hotel 12000, mortgage 5000
+        {"Nuwara Eliya",  37, DarkBlue, 10000, 1000, 1000, 10000, 5000, 3000, 12000, -1, 0, 0, 0, 0},
+        {"Galle Face",    39, DarkBlue, 12000, 1200, 1200, 12000, 5000, 3000, 12000, -1, 0, 0, 0, 0}
+    };
+
+
+//wrong morgaged values
+struct railway railways[4] = {
+    {"Colombo Fort Railway Station", 5,  8000, 4000, -1, 0},
+    {"Kandy Railway Station",        15, 8000, 4000, -1, 0},
+    {"Galle Railway Station",        25, 8000, 4000, -1, 0},
+    {"Jaffna Railway Station",       35, 8000, 4000, -1, 0}
+};
+
+struct utility utilities[2] = {
+    {"Ceylon Electricity Board", 12,  6000, 3000, -1, 0},
+    {"National Water Supply and Drainage Board", 28, 6000, 3000, -1, 0}
+};
+
+struct insuranceCompany insuranceCompanies[2] = {
+    {"Sri Lanka Insurance", 17},
+    {"Ceylinco Insurance", 33}
+};
+
+}

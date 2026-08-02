@@ -1,7 +1,7 @@
 #ifndef GAME_H
 #define GAME_H
 
-int rollDice();
+//int rollDice();
 void startGame();
 
 #endif
