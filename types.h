@@ -58,20 +58,24 @@ struct property
     int houseCount;
     int hotelCount;
 };
+extern struct property properties[22];
 
 struct square
 {
     char name[50];
+    int squareNumber;
     enum squareType type;
     int propertyColor;
 };
+extern struct square board[40];
 
 struct player
 {
     enum players playerID; 
     char name[50];
     int priority;
-    int position;
+    int oldPosition;
+    int currentPosition;
     int money;
     int ownedProperties[50];
     int ownedPropertiesCount;
@@ -81,7 +85,11 @@ struct player
     int railwayCount;
     int utiliy;
     int hasLoan;
+    int lastRoll1;
+    int lastRoll2;
+    int currentRound;
 };
+extern struct player players[4];
 
 struct railway {
     char name[50];
@@ -91,6 +99,7 @@ struct railway {
     int owner;              // -1 = unowned, else player index
     int isMortgaged;
 };
+extern struct railway railways[4];
 
 struct utility {
     char name[50];
@@ -100,11 +109,13 @@ struct utility {
     int owner;              // -1 = unowned, else player index
     int isMortgaged;
 };
+extern struct utility utilities[2];
 
 struct insuranceCompany{
     char name[50];
     int sqareNumber;    // ASSUMPTION: not specified in assignment — confirm with lectur
 };
+extern struct insuranceCompany insuranceCompanies[2];
 
 enum insurancePolicyType{
     basicPropertyInsurance,
@@ -127,7 +138,8 @@ struct Insurance {
     int coverage_disaster_types[7];
     int installment_percentage;
     int coverage_percentage;
-
 };
+
+
 
 #endif 

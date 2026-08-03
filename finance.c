@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "types.h"
 
-void board();
+//void board();
 
 struct Insurance insurance[3]={
     {basicPropertyInsurance, {fire, flood, -1, -1, -1, -1, -1}, 5, 80},

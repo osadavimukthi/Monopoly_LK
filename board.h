@@ -1,6 +1,6 @@
 #ifndef BOARD_H
 #define BOARD_H
 
-    void board();
+    void defineBoard();
 
 #endif

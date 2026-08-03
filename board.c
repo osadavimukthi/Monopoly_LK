@@ -3,52 +3,48 @@
 
 
 
-void board(){
-    struct square board[40] = {
-        {"GO",                          Start, -1},
-        {"Pettah",                      Property, 0},
-        {"Community Development Fund",  CommunityFund, -1},
-        {"Maradana",                    Property, 1},
-        {"Income Tax",                  Tax, -1},
-        {"Colombo Fort Railway Station", Railway, -1},
-        {"Bambalapitiya",               Property, 2},
-        {"National Event Card",         Event, -1},
-        {"Wellawatte",                  Property, 3},
-        {"Mount Lavinia",               Property, 4},
-
-        {"Jail / Just Visiting",        Jail, -1},
-        {"Nugegoda",                    Property, 5},
-        {"Ceylon Electricity Board",    Utility, -1},
-        {"Maharagama",                  Property, 6},
-        {"Kottawa",                     Property, 7},
-        {"Kandy Railway Station",       Railway, -1},
-        {"Negombo",                     Property, 8},
-        {"Sri Lanka Insurance",         Insurance, -1},
-        {"Katunayake",                  Property, 9},
-        {"Ja-Ela",                      Property, 10},
-
-        {"Free Parking",                FreeParking, -1},
-        {"Kandy City",                  Property, 11},
-        {"National Event Card",         Event, -1},
-        {"Peradeniya",                  Property, 12},
-        {"Katugastota",                 Property, 13},
-        {"Galle Railway Station",       Railway, -1},
-        {"Galle Fort",                  Property, 14},
-        {"Unawatuna",                   Property, 15},
-        {"National Water Supply and Drainage Board", Utility, -1},
-        {"Hikkaduwa",                   Property, 16},
-
-        {"Go To Jail",                  GoToJail, -1},
-        {"Jaffna Town",                 Property, 17},
-        {"Nallur",                      Property, 18},
-        {"Ceylinco Insurance",          Insurance, -1},
-        {"Trincomalee",                 Property, 19},
-        {"Jaffna Railway Station",      Railway, -1},
-        {"National Event Card",         Event, -1},
-        {"Nuwara Eliya",                Property, 20},
-        {"Bank of Ceylon",              Bank, -1},
-        {"Galle Face",                  Property, 21}
-    };
+struct square board[40] = {
+    {"GO",                                  0,  Start,          -1},
+    {"Pettah",                              1,  Property,       -1},
+    {"Community Development Fund",          2,  CommunityFund,  -1},
+    {"Maradana",                            3,  Property,       -1},
+    {"Income Tax",                          4,  Tax,            -1},
+    {"Colombo Fort Railway Station",        5,  Railway,        -1},
+    {"Bambalapitiya",                       6,  Property,       -1},
+    {"National Event Card",                 7,  Event,          -1},
+    {"Wellawatte",                          8,  Property,       -1},
+    {"Mount Lavinia",                       9,  Property,       -1},
+    {"Jail / Just Visiting",               10,  Jail,           -1},
+    {"Nugegoda",                           11,  Property,       -1},
+    {"Ceylon Electricity Board",           12,  Utility,        -1},
+    {"Maharagama",                         13,  Property,       -1},
+    {"Kottawa",                            14,  Property,       -1},
+    {"Kandy Railway Station",              15,  Railway,        -1},
+    {"Negombo",                            16,  Property,       -1},
+    {"Sri Lanka Insurance",                17,  Insurance,      -1},
+    {"Katunayake",                         18,  Property,       -1},
+    {"Ja-Ela",                             19,  Property,       -1},
+    {"Free Parking",                       20,  FreeParking,    -1},
+    {"Kandy City",                         21,  Property,       -1},
+    {"National Event Card",                22,  Event,          -1},
+    {"Peradeniya",                         23,  Property,       -1},
+    {"Katugastota",                        24,  Property,       -1},
+    {"Galle Railway Station",              25,  Railway,        -1},
+    {"Galle Fort",                         26,  Property,       -1},
+    {"Unawatuna",                          27,  Property,       -1},
+    {"National Water Supply and Drainage Board", 28, Utility,   -1},
+    {"Hikkaduwa",                          29,  Property,       -1},
+    {"Go To Jail",                         30,  GoToJail,       -1},
+    {"Jaffna Town",                        31,  Property,       -1},
+    {"Nallur",                             32,  Property,       -1},
+    {"Ceylinco Insurance",                 33,  Insurance,      -1},
+    {"Trincomalee",                        34,  Property,       -1},
+    {"Jaffna Railway Station",             35,  Railway,        -1},
+    {"National Event Card",                36,  Event,          -1},
+    {"Nuwara Eliya",                       37,  Property,       -1},
+    {"Bank of Ceylon",                     38,  Bank,           -1},
+    {"Galle Face",                         39,  Property,       -1}
+};
 
     struct property properties[22] = {
         // Brown group — house 500, hotel 2000, mortgage 750
@@ -91,7 +87,7 @@ void board(){
     };
 
 
-//wrong morgaged values
+//wrong morgaged and base  values
 struct railway railways[4] = {
     {"Colombo Fort Railway Station", 5,  8000, 4000, -1, 0},
     {"Kandy Railway Station",        15, 8000, 4000, -1, 0},
@@ -108,5 +104,3 @@ struct insuranceCompany insuranceCompanies[2] = {
     {"Sri Lanka Insurance", 17},
     {"Ceylinco Insurance", 33}
 };
-
-}
