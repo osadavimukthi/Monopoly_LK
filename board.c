@@ -96,8 +96,8 @@ struct railway railways[4] = {
 };
 
 struct utility utilities[2] = {
-    {"Ceylon Electricity Board", 12,  6000, 3000, -1, 0},
-    {"National Water Supply and Drainage Board", 28, 6000, 3000, -1, 0}
+    {"Ceylon Electricity Board",                 12, 6000, 6000, 3000, -1, 0, 0, 0},
+    {"National Water Supply and Drainage Board", 28, 6000, 6000, 3000, -1, 0, 0, 0}
 };
 
 struct insuranceCompany insuranceCompanies[2] = {

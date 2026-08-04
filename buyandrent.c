@@ -146,3 +146,61 @@ void railwayBuyRent(int playerSquare, int k)
         l++;
     }
 }
+
+void utilityBuyRent(int playerSquare, int k)
+{
+    int l = 0;
+
+    while(l < 2)
+    {
+        if(playerSquare == utilities[l].squareNumber)
+        {
+            if(utilities[l].hasOwner == 0)
+            {
+                if(players[k].money >= utilities[l].currentPrice)
+                {
+                    utilities[l].hasOwner = 1;
+                    utilities[l].owner = players[k].playerID;
+
+                    players[k].money -= utilities[l].currentPrice;
+
+                    players[k].ownedUtilities[players[k].ownedUtilitiesCount] =
+                        utilities[l].squareNumber;
+                    players[k].ownedUtilitiesCount++;
+
+                    printf("%s purchased %s for LKR %d.\n\n",
+                           players[k].name,
+                           utilities[l].name,
+                           utilities[l].currentPrice);
+                }
+                else
+                {
+                    printf("%s doesn't have enough money to buy %s.\n\n",
+                           players[k].name,
+                           utilities[l].name);
+                }
+            }
+            else
+            {   
+                if(utiilities[0].owner == utililities[1].owner)
+                {
+                    utilities[l].rent = 10 * ( players[k].lastRoll1 + players[k].lastRoll2);
+                }
+                else
+                {
+                    utilities[l].rent = 4 * ( players[k].lastRoll1 + players[k].lastRoll2);
+                }
+                printf("%s is already owned.\n", utilities[l].name);
+                printf("%s landed on %s \n", players[k].name, utilities[l].name);
+                printf("Rent paid : %d \n", utilities[l].rent);
+                printf("Owner : %s \n\n", players[utilities[l].owner].name);
+                players[k].money -= utilities[l].rent;
+                players[utilities[l].owner].money += utilities[l].rent;
+            }
+
+            break;
+        }
+
+        l++;
+    }
+}

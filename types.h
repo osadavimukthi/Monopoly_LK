@@ -112,10 +112,13 @@ extern struct railway railways[4];
 struct utility {
     char name[50];
     int squareNumber;
-    int purchasePrice;     // ASSUMPTION: not specified in assignment — confirm with lecturer
+    int basePurchasePrice;     // ASSUMPTION: not specified in assignment — confirm with lecturer
+    int currentPrice;          // ASSUMPTION: not specified in assignment — confirm with lecturer
     int mortgageValue;
     int owner;              // -1 = unowned, else player index
+    int hasOwner;
     int isMortgaged;
+    int rent;
 
 };
 extern struct utility utilities[2];

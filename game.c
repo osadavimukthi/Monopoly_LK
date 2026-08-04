@@ -87,16 +87,7 @@ while(priority <= 4)
 }
    
 
-
-    
-
-
 }
-
-
-
-
-
 
 void playGame()
 {
