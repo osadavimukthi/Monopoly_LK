@@ -52,11 +52,13 @@ struct property
     int mortgagedValue;
     int houseConstructionCost;
     int hotelConstructionCost;
+    int hasOwner;
     int owner;
     int isMortgaged;
     int isInsured;
     int houseCount;
     int hotelCount;
+
 };
 extern struct property properties[22];
 
@@ -77,43 +79,50 @@ struct player
     int oldPosition;
     int currentPosition;
     int money;
-    int ownedProperties[50];
+    int ownedProperties[22];
     int ownedPropertiesCount;
     int isInJail;
     int jailTurnCount;
     int isBankrupt;
-    int railwayCount;
+    int ownedRailwayCount;
     int utiliy;
     int hasLoan;
     int lastRoll1;
     int lastRoll2;
-    int currentRound;
+    int playerRound;
+    int playerTurn;
 };
 extern struct player players[4];
 
 struct railway {
     char name[50];
-    int sqareNumber;
-    int purchasePrice;     // ASSUMPTION: not specified in assignment — confirm with lecturer
+    int squareNumber;
+    int basePurchasePrice;
+    int currentPrice;
+    int baseRent;
+    int currentRent;        // ASSUMPTION: not specified in assignment — confirm with lecturer
     int mortgageValue;
     int owner;              // -1 = unowned, else player index
+    int hasOwner;
     int isMortgaged;
+
 };
 extern struct railway railways[4];
 
 struct utility {
     char name[50];
-    int sqareNumber;
+    int squareNumber;
     int purchasePrice;     // ASSUMPTION: not specified in assignment — confirm with lecturer
     int mortgageValue;
     int owner;              // -1 = unowned, else player index
     int isMortgaged;
+
 };
 extern struct utility utilities[2];
 
 struct insuranceCompany{
     char name[50];
-    int sqareNumber;    // ASSUMPTION: not specified in assignment — confirm with lectur
+    int squareNumber;    // ASSUMPTION: not specified in assignment — confirm with lectur
 };
 extern struct insuranceCompany insuranceCompanies[2];
 

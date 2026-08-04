@@ -5,7 +5,7 @@
 #include "types.h"
 #include "players.h"
 #include "board.h"
-
+#include "buyandrent.h"
 
 
 void startingMasage()
@@ -94,23 +94,26 @@ while(priority <= 4)
 }
 
 
+
+
+
+
 void playGame()
 {
     int gameRound = 0;
-
-    while(gameRound < 20)
+    
+    printf("\n*******************************\n");
+    printf("Game Round %d Starts\n", gameRound + 1);
+    printf("*******************************\n\n");
+    
+    while(gameRound < 5)
     {
-        printf("\n*******************************\n");
-        printf("Round %d starts\n", gameRound + 1);
-        printf("*******************************\n\n");
+        
 
-        int ongoingPlayer = 1;
-
-        while(ongoingPlayer <= 4)
+        /* Every player gets exactly one turn */
+        for(int ongoingPlayer = 1; ongoingPlayer <= 4; ongoingPlayer++)
         {
-            int k = 0;
-
-            while(k < 4)
+            for(int k = 0; k < 4; k++)
             {
                 if(players[k].priority == ongoingPlayer)
                 {
@@ -133,47 +136,77 @@ void playGame()
                             break;
                     }
 
+                    /* Roll Dice */
                     players[k].lastRoll1 = rollDice();
                     players[k].lastRoll2 = rollDice();
 
+                    int diceTotal = players[k].lastRoll1 + players[k].lastRoll2;
+
                     printf("%s rolled %d\n",
                            players[k].name,
-                           players[k].lastRoll1 + players[k].lastRoll2);
+                           diceTotal);
+
+                    /* One turn completed */
+                    players[k].playerTurn++;
 
                     players[k].oldPosition = players[k].currentPosition;
+                    players[k].currentPosition += diceTotal;
 
-                    players[k].currentPosition +=
-                        players[k].lastRoll1 + players[k].lastRoll2;
-
+                    /* Passed GO */
                     if(players[k].currentPosition >= 40)
                     {
                         players[k].currentPosition -= 40;
+
                         players[k].money += 2000;
-                        players[k].currentRound++;
+
+                        players[k].playerRound++;
 
                         printf("%s passed GO and collects LKR 2000\n",
                                players[k].name);
                     }
 
-                    printf("%s moves from %d to %d\n\n",
+                    printf("%s moves from %d to %d\n",
                            players[k].name,
                            players[k].oldPosition,
                            players[k].currentPosition);
+
+                    printf("Player Turn  : %d\n", players[k].playerTurn);
+                    printf("Player Round : %d\n\n", players[k].playerRound);
+                    propertyBuyRent(players[k].currentPosition, k);
+                    railwayBuyRent(players[k].currentPosition, k);
                 }
-
-                k++;
+            
             }
-
-            ongoingPlayer++;
         }
 
-        /* One round completed */
-        gameRound++;
+        /* Check whether every player has completed this game round */
+
+        int completed = 1;
+
+        for(int i = 0; i < 4; i++)
+        {
+            if(players[i].playerRound <= gameRound)
+            {
+                completed = 0;
+                break;
+            }
+        }
+
+        if(completed)
+        {
+            gameRound++;
+
+            printf("=========================================\n");
+            printf("Game Round %d Completed\n", gameRound);
+            printf("=========================================\n\n");
+            printf("\n*******************************\n");
+            printf("Game Round %d Starts\n", gameRound + 1);
+            printf("*******************************\n\n");
+        }
     }
+
+    printf("\n========== GAME OVER ==========\n");
 }
-
-
-
 
 
 
