@@ -7,5 +7,4 @@ int rollDice();
 void setPlayOrder();
 void playGame();
 void startGame();
-
 #endif
