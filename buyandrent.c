@@ -5,6 +5,7 @@
 #include "types.h"
 #include "players.h"
 #include "board.h"
+#define INCOMETAXRATE 0.15
 
 void propertyBuyRent(int playerSquare, int k)
 {
@@ -22,11 +23,11 @@ void propertyBuyRent(int playerSquare, int k)
                     properties[l].owner = players[k].playerID;
 
                     players[k].money -= properties[l].currentPrice;
-
+                    players[k].taxableMoney -= properties[l].currentPrice;
                     players[k].ownedProperties[players[k].ownedPropertiesCount] =
-                        properties[l].squareNumber;
+                    properties[l].squareNumber;
                     players[k].ownedPropertiesCount++;
-
+                    
                     printf("%s purchased %s for LKR %d.\n\n",
                            players[k].name,
                            properties[l].name,
@@ -46,6 +47,7 @@ void propertyBuyRent(int playerSquare, int k)
                 printf("Rent paid : %d \n", properties[l].currentRent);
                 printf("Owner : %s \n\n", players[properties[l].owner].name);
                 players[k].money -= properties[l].currentRent;
+                players[k].taxableMoney -= properties[l].currentRent;
                 players[properties[l].owner].money += properties[l].currentRent;
             }
 
@@ -72,6 +74,7 @@ void railwayBuyRent(int playerSquare, int k)
                     railways[l].owner = players[k].playerID;
 
                     players[k].money -= railways[l].currentPrice;
+                    players[k].taxableMoney -= railways[l].currentPrice;
 
                     players[k].ownedProperties[players[k].ownedPropertiesCount] =
                         railways    [l].squareNumber;
@@ -137,6 +140,7 @@ void railwayBuyRent(int playerSquare, int k)
                 printf("Rent paid : %d \n", railways[l].currentRent);
                 printf("Owner : %s \n\n", players[railways[l].owner].name);
                 players[k].money -= railways[l].currentRent;
+                players[k].taxableMoney -= railways[l].currentRent;
                 players[railways[l].owner].money += railways[l].currentRent;
             }
 
@@ -163,7 +167,7 @@ void utilityBuyRent(int playerSquare, int k)
                     utilities[l].owner = players[k].playerID;
 
                     players[k].money -= utilities[l].currentPrice;
-
+                    players[k].taxableMoney -= utilities[l].currentPrice;
                     players[k].ownedUtilities[players[k].ownedUtilitiesCount] =
                         utilities[l].squareNumber;
                     players[k].ownedUtilitiesCount++;
@@ -182,7 +186,8 @@ void utilityBuyRent(int playerSquare, int k)
             }
             else
             {   
-                if(utiilities[0].owner == utililities[1].owner)
+                if(utilities[0].hasOwner && utilities[1].hasOwner &&
+                   utilities[0].owner == utilities[1].owner)
                 {
                     utilities[l].rent = 10 * ( players[k].lastRoll1 + players[k].lastRoll2);
                 }
@@ -195,6 +200,7 @@ void utilityBuyRent(int playerSquare, int k)
                 printf("Rent paid : %d \n", utilities[l].rent);
                 printf("Owner : %s \n\n", players[utilities[l].owner].name);
                 players[k].money -= utilities[l].rent;
+                players[k].taxableMoney -= utilities[l].rent;
                 players[utilities[l].owner].money += utilities[l].rent;
             }
 
@@ -202,5 +208,17 @@ void utilityBuyRent(int playerSquare, int k)
         }
 
         l++;
+    }
+}
+
+void payTax(int playerSquare ,int k)
+{   
+    if(playerSquare == 4)
+    {
+        double tax = players[k].taxableMoney * INCOMETAXRATE;
+        players[k].money-=(int)tax;
+        printf("Paid Tax : %d \n\n",(int)tax);
+        players[k].taxableMoney =0;
+
     }
 }

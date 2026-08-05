@@ -165,6 +165,8 @@ void playGame()
                     printf("Player Round : %d\n\n", players[k].playerRound);
                     propertyBuyRent(players[k].currentPosition, k);
                     railwayBuyRent(players[k].currentPosition, k);
+                    utilityBuyRent(players[k].currentPosition, k);
+                    payTax(players[k].currentPosition,k);
                 }
             
             }

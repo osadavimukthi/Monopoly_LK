@@ -79,13 +79,15 @@ struct player
     int oldPosition;
     int currentPosition;
     int money;
+    int taxableMoney;
     int ownedProperties[22];
     int ownedPropertiesCount;
     int isInJail;
     int jailTurnCount;
     int isBankrupt;
     int ownedRailwayCount;
-    int utiliy;
+    int ownedUtilities[2];
+    int ownedUtilitiesCount;
     int hasLoan;
     int lastRoll1;
     int lastRoll2;
