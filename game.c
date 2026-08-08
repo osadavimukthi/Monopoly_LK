@@ -6,6 +6,7 @@
 #include "players.h"
 #include "board.h"
 #include "buyandrent.h"
+#include "buildings.h"
 
 void startingMasage()
 {
@@ -94,7 +95,6 @@ void playGame()
 
     while(gameRound < 5)
     {
-        /* Every player gets exactly one turn */
         for(int ongoingPlayer = 1; ongoingPlayer <= 4; ongoingPlayer++)
         {
             for(int k = 0; k < 4; k++)
@@ -122,7 +122,6 @@ void playGame()
                                 break;
                         }
 
-                        /* Roll Dice */
                         players[k].lastRoll1 = rollDice();
                         players[k].lastRoll2 = rollDice();
 
@@ -131,10 +130,8 @@ void playGame()
 
                         printf("%s rolled %d\n",players[k].name,diceTotal);
 
-                        /* One turn completed */
                         players[k].playerTurn++;
 
-                        /* Player is in Jail */
                         if(players[k].isInJail)
                         {
                             outOfJail(players[k].currentPosition, k);
@@ -146,7 +143,6 @@ void playGame()
                             players[k].oldPosition =players[k].currentPosition;
                             players[k].currentPosition += diceTotal;
 
-                            /* Passed GO */
                             if(players[k].currentPosition >= 40)
                             {
                                 players[k].currentPosition -= 40;
@@ -182,6 +178,7 @@ void playGame()
                                 payTax(
                                     players[k].currentPosition, k);
                             }
+                            playerConstruction(k);
                             checkMonopoly(k);
                             playerBankrupt(k, &bankruptedPlayerCount);
                         }
@@ -227,7 +224,6 @@ void playGame()
 
     printf("\n========== GAME OVER ==========\n");
 }
-
 
 
 void startGame(){

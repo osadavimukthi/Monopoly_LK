@@ -46,7 +46,7 @@ struct square board[40] = {
     {"Galle Face",                         39,  Property,       -1}
 };
 
-    struct property properties[22] = {
+struct property properties[22] = {
         // Brown group — house 500, hotel 2000, mortgage 750
         {"Pettah",        1,  Brown,     1500, 100,  100, 1500, 750,  500, 2000, 0,-1, 0, 0, 0, 0},
         {"Maradana",      3,  Brown,     1800, 120,  120, 1800, 750,  500, 2000, 0,-1, 0, 0, 0, 0},
