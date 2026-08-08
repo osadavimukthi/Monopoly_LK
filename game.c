@@ -10,21 +10,18 @@
 void startingMasage()
 {
     printf("MONOPOLY-LK Simulation\n\n");
-    
     printf("Player 1: Aggresive Investor\n");
     printf("Player 2: Conservative Banker\n");
     printf("Player 3: Risk Taker\n");
     printf("Player 4: Opportunistic Trader\n\n");
-
     printf("Each player Begins with LKR 30 000\n\n");
 }   
-//void defineBoard();
-//void playerStructure();
 
 int rollDice()
 {
     return rand() % 6 + 1;
 }
+
 void setPlayOrder()
 {
     srand(time(NULL));   // Seed the random number generator ONCE
@@ -129,45 +126,65 @@ void playGame()
                         players[k].lastRoll1 = rollDice();
                         players[k].lastRoll2 = rollDice();
 
-                        int diceTotal = players[k].lastRoll1 + players[k].lastRoll2;
+                        int diceTotal = players[k].lastRoll1 +
+                                        players[k].lastRoll2;
 
-                        printf("%s rolled %d\n",
-                            players[k].name,
-                            diceTotal);
+                        printf("%s rolled %d\n",players[k].name,diceTotal);
 
                         /* One turn completed */
                         players[k].playerTurn++;
 
-                        players[k].oldPosition = players[k].currentPosition;
-                        players[k].currentPosition += diceTotal;
-
-                        /* Passed GO */
-                        if(players[k].currentPosition >= 40)
+                        /* Player is in Jail */
+                        if(players[k].isInJail)
                         {
-                            players[k].currentPosition -= 40;
-
-                            players[k].money += 2000;
-
-                            players[k].playerRound++;
-
-                            printf("%s passed GO and collects LKR 2000\n",
-                                players[k].name);
+                            outOfJail(players[k].currentPosition, k);
                         }
 
-                        printf("%s moves from %d to %d\n",
-                            players[k].name,
-                            players[k].oldPosition,
-                            players[k].currentPosition);
+                        /* Player is not in Jail */
+                        else
+                        {
+                            players[k].oldPosition =players[k].currentPosition;
+                            players[k].currentPosition += diceTotal;
 
-                        printf("Player Turn  : %d\n", players[k].playerTurn);
-                        printf("Player Round : %d\n\n", players[k].playerRound);
+                            /* Passed GO */
+                            if(players[k].currentPosition >= 40)
+                            {
+                                players[k].currentPosition -= 40;
 
-                        propertyBuyRent(players[k].currentPosition, k);
-                        railwayBuyRent(players[k].currentPosition, k);
-                        utilityBuyRent(players[k].currentPosition, k);
-                        payTax(players[k].currentPosition, k);
+                                players[k].money += 2000;
 
-                        playerBankrupt(k, bankruptedPlayerCount);
+                                players[k].playerRound++;
+
+                                printf("%s passed GO and collects LKR 2000\n",players[k].name);
+                            }
+
+                            printf("%s moves from %d to %d\n",players[k].name,players[k].oldPosition,players[k].currentPosition);
+
+                            printf("Player Turn  : %d\n",players[k].playerTurn);
+
+                            printf("Player Round : %d\n\n",players[k].playerRound);
+
+                            /* Check Go To Jail */
+                            gotoJail(players[k].currentPosition, k);
+
+                            /* Only resolve landing if player was not sent to Jail */
+                            if(!players[k].isInJail)
+                            {
+                                propertyBuyRent(
+                                    players[k].currentPosition, k);
+
+                                railwayBuyRent(
+                                    players[k].currentPosition, k);
+
+                                utilityBuyRent(
+                                    players[k].currentPosition, k);
+
+                                payTax(
+                                    players[k].currentPosition, k);
+                            }
+                            checkMonopoly(k);
+                            playerBankrupt(k, &bankruptedPlayerCount);
+                        }
                     }
                 }
             }

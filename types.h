@@ -85,6 +85,7 @@ struct player
     int isInJail;
     int jailTurnCount;
     int isBankrupt;
+    int ownedRailways[4];
     int ownedRailwayCount;
     int ownedUtilities[2];
     int ownedUtilitiesCount;

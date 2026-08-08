@@ -28,32 +28,32 @@ void propertyBuyRent(int playerSquare, int k)
                     properties[l].squareNumber;
                     players[k].ownedPropertiesCount++;
                     
-                    printf("%s purchased %s for LKR %d.\n\n",
-                           players[k].name,
-                           properties[l].name,
-                           properties[l].currentPrice);
+                    printf("%s purchased %s for LKR %d.\n\n",players[k].name,properties[l].name,properties[l].currentPrice);
                 }
                 else
                 {
-                    printf("%s doesn't have enough money to buy %s.\n\n",
-                           players[k].name,
-                           properties[l].name);
+                    printf("%s doesn't have enough money to buy %s.\n\n",players[k].name,properties[l].name);
                 }
             }
             else
-            {
-                printf("%s is already owned.\n", properties[l].name);
-                printf("%s landed on %s \n", players[k].name, properties[l].name);
-                printf("Rent paid : %d \n", properties[l].currentRent);
-                printf("Owner : %s \n\n", players[properties[l].owner].name);
-                players[k].money -= properties[l].currentRent;
-                players[k].taxableMoney -= properties[l].currentRent;
-                players[properties[l].owner].money += properties[l].currentRent;
+            {   
+                if(properties[l].owner != players[k].playerID)
+                {
+                    printf("%s is already owned.\n", properties[l].name);
+                    printf("%s landed on %s \n", players[k].name, properties[l].name);
+                    printf("Rent paid : %d \n", properties[l].currentRent);
+                    printf("Owner : %s \n\n", players[properties[l].owner].name);
+                    players[k].money -= properties[l].currentRent;
+                    players[k].taxableMoney -= properties[l].currentRent;
+                    players[properties[l].owner].money += properties[l].currentRent;
+                }
+                else
+                {
+                    printf("%s landed on their own property %s. No rent paid.\n\n",players[k].name,properties[l].name);
+                }
             }
-
             break;
         }
-
         l++;
     }
 }
@@ -76,72 +76,97 @@ void railwayBuyRent(int playerSquare, int k)
                     players[k].money -= railways[l].currentPrice;
                     players[k].taxableMoney -= railways[l].currentPrice;
 
-                    players[k].ownedProperties[players[k].ownedPropertiesCount] =
-                        railways    [l].squareNumber;
+                    players[k].ownedRailways[players[k].ownedRailwayCount] =
+                    railways[l].squareNumber;
                     players[k].ownedRailwayCount++;
 
-                    printf("%s purchased %s for LKR %d.\n\n",
-                           players[k].name,
-                           railways[l].name,
-                           railways[l].currentPrice);
+                    printf("%s purchased %s for LKR %d.\n\n",players[k].name,railways[l].name,railways[l].currentPrice);
+
                     if(players[k].ownedRailwayCount == 1)
                     {
                         printf("%s owns 1 railway! \n\n", players[k].name);
-                        printf("Base rent of %s is LKR %d \n\n", railways[l].name, railways[l].currentRent);
 
+                        for(int i = 0; i < 4; i++)
+                        {
+                            if(railways[i].owner == players[k].playerID)
+                            {
+                                railways[i].currentRent = 250;
+
+                                printf("Base rent of %s is LKR %d \n\n", railways[i].name, railways[i].currentRent);
+                            }
+                        }
                     }
                     else if(players[k].ownedRailwayCount == 2)
                     {
                         printf("%s owns 2 railways! \n\n", players[k].name);
-                        railways[l-1].currentRent = 500;
-                        railways[l].currentRent = 500;
-                        printf("Base rent of %s is LKR %d \n", railways[l-1].name, railways[l-1].currentRent);
-                        printf("Base rent of %s is LKR %d \n\n", railways[l].name, railways[l].currentRent);
 
+                        for(int i = 0; i < 4; i++)
+                        {
+                            if(railways[i].owner == players[k].playerID)
+                            {
+                                railways[i].currentRent = 500;
+
+                                printf("Base rent of %s is LKR %d \n", railways[i].name,railways[i].currentRent);
+                            }
+                        }
+
+                        printf("\n");
                     }
                     else if(players[k].ownedRailwayCount == 3)
                     {
                         printf("%s owns 3 railways! \n\n", players[k].name);
-                        railways[l-2].currentRent = 1000;
-                        railways[l-1].currentRent = 1000;
-                        railways[l].currentRent = 1000;
-                        printf("Base rent of %s is LKR %d \n", railways[l-2].name, railways[l-2].currentRent);
-                        printf("Base rent of %s is LKR %d \n", railways[l-1].name, railways[l-1].currentRent);
-                        printf("Base rent of %s is LKR %d \n\n", railways[l].name, railways[l].currentRent);
 
+                        for(int i = 0; i < 4; i++)
+                        {
+                            if(railways[i].owner == players[k].playerID)
+                            {
+                                railways[i].currentRent = 1000;
+
+                                printf("Base rent of %s is LKR %d \n", railways[i].name,railways[i].currentRent);
+                            }
+                        }
+
+                        printf("\n");
                     }
                     else if(players[k].ownedRailwayCount == 4)
                     {
                         printf("%s owns all 4 railways! \n\n", players[k].name);
-                        railways[l-3].currentRent = 2000;
-                        railways[l-2].currentRent = 2000;
-                        railways[l-1].currentRent = 2000;
-                        railways[l].currentRent = 2000;
-                        printf("Base rent of %s is LKR %d \n", railways[l-3].name, railways[l-3].currentRent);
-                        printf("Base rent of %s is LKR %d \n", railways[l-2].name, railways[l-2].currentRent);
-                        printf("Base rent of %s is LKR %d \n", railways[l-1].name, railways[l-1].currentRent);
-                        printf("Base rent of %s is LKR %d \n\n", railways[l].name, railways[l].currentRent);
 
+                        for(int i = 0; i < 4; i++)
+                        {
+                            if(railways[i].owner == players[k].playerID)
+                            {
+                                railways[i].currentRent = 2000;
+
+                                printf("Base rent of %s is LKR %d \n",railways[i].name,railways[i].currentRent);
+                            }
+                        }
+
+                        printf("\n");
                     }
-
                 }
-
                 else
                 {
-                    printf("%s doesn't have enough money to buy %s.\n\n",
-                           players[k].name,
-                           railways[l].name);
+                    printf("%s doesn't have enough money to buy %s.\n\n",players[k].name,railways[l].name);
                 }
             }
             else
             {
-                printf("%s is already owned.\n", railways[l].name);
-                printf("%s landed on %s \n", players[k].name, railways[l].name);
-                printf("Rent paid : %d \n", railways[l].currentRent);
-                printf("Owner : %s \n\n", players[railways[l].owner].name);
-                players[k].money -= railways[l].currentRent;
-                players[k].taxableMoney -= railways[l].currentRent;
-                players[railways[l].owner].money += railways[l].currentRent;
+                if(railways[l].owner != players[k].playerID)
+                {
+                    printf("%s is already owned.\n", railways[l].name);
+                    printf("%s landed on %s \n", players[k].name, railways[l].name);
+                    printf("Rent paid : %d \n", railways[l].currentRent);
+                    printf("Owner : %s \n\n", players[railways[l].owner].name);
+
+                    players[k].money -= railways[l].currentRent;
+                    players[k].taxableMoney -= railways[l].currentRent;
+                    players[railways[l].owner].money += railways[l].currentRent;
+                }
+                else
+                {
+                    printf("%s landed on their own railway %s. No rent paid.\n\n",players[k].name,railways[l].name);
+                }
             }
 
             break;
@@ -169,19 +194,14 @@ void utilityBuyRent(int playerSquare, int k)
                     players[k].money -= utilities[l].currentPrice;
                     players[k].taxableMoney -= utilities[l].currentPrice;
                     players[k].ownedUtilities[players[k].ownedUtilitiesCount] =
-                        utilities[l].squareNumber;
+                    utilities[l].squareNumber;
                     players[k].ownedUtilitiesCount++;
 
-                    printf("%s purchased %s for LKR %d.\n\n",
-                           players[k].name,
-                           utilities[l].name,
-                           utilities[l].currentPrice);
+                    printf("%s purchased %s for LKR %d.\n\n",players[k].name,utilities[l].name,utilities[l].currentPrice);
                 }
                 else
                 {
-                    printf("%s doesn't have enough money to buy %s.\n\n",
-                           players[k].name,
-                           utilities[l].name);
+                    printf("%s doesn't have enough money to buy %s.\n\n",players[k].name,utilities[l].name);
                 }
             }
             else
@@ -195,13 +215,17 @@ void utilityBuyRent(int playerSquare, int k)
                 {
                     utilities[l].rent = 4 * ( players[k].lastRoll1 + players[k].lastRoll2);
                 }
-                printf("%s is already owned.\n", utilities[l].name);
-                printf("%s landed on %s \n", players[k].name, utilities[l].name);
-                printf("Rent paid : %d \n", utilities[l].rent);
-                printf("Owner : %s \n\n", players[utilities[l].owner].name);
-                players[k].money -= utilities[l].rent;
-                players[k].taxableMoney -= utilities[l].rent;
-                players[utilities[l].owner].money += utilities[l].rent;
+                if(utilities[l].owner != players[k].playerID)
+                {
+                    printf("%s is already owned.\n", utilities[l].name);
+                    printf("%s landed on %s \n", players[k].name, utilities[l].name);
+                    printf("Rent paid : %d \n", utilities[l].rent);
+                    printf("Owner : %s \n\n", players[utilities[l].owner].name);
+                    players[k].money -= utilities[l].rent;
+                    players[k].taxableMoney -= utilities[l].rent;
+                    players[utilities[l].owner].money += utilities[l].rent;
+                }
+                
             }
 
             break;
@@ -220,5 +244,76 @@ void payTax(int playerSquare ,int k)
         printf("Paid Tax : %d \n\n",(int)tax);
         players[k].taxableMoney =0;
 
+    }
+}
+
+void checkMonopoly(int k)
+{
+    int monopoly = 0;
+
+    /* Brown */
+    if(properties[0].owner == players[k].playerID &&
+       properties[1].owner == players[k].playerID)
+    {
+        monopoly = 1;
+        printf("%s owns the Brown monopoly.\n", players[k].name);
+    }
+
+    /* Light Blue */
+    if(properties[2].owner == players[k].playerID &&
+       properties[3].owner == players[k].playerID &&
+       properties[4].owner == players[k].playerID)
+    {
+        monopoly = 1;
+        printf("%s owns the Light Blue monopoly.\n", players[k].name);
+    }
+
+    /* Pink */
+    if(properties[5].owner == players[k].playerID &&
+       properties[6].owner == players[k].playerID &&
+       properties[7].owner == players[k].playerID)
+    {
+        monopoly = 1;
+        printf("%s owns the Pink monopoly.\n", players[k].name);
+    }
+
+    /* Orange */
+    if(properties[8].owner == players[k].playerID &&
+       properties[9].owner == players[k].playerID &&
+       properties[10].owner == players[k].playerID)
+    {
+        monopoly = 1;
+        printf("%s owns the Orange monopoly.\n", players[k].name);
+    }
+    /* Red */
+    if(properties[11].owner == players[k].playerID &&
+       properties[12].owner == players[k].playerID &&
+       properties[13].owner == players[k].playerID)
+    {
+        monopoly = 1;
+        printf("%s owns the Red monopoly.\n", players[k].name);
+    }
+    /* Yellow */
+    if(properties[14].owner == players[k].playerID &&
+       properties[15].owner == players[k].playerID &&
+       properties[16].owner == players[k].playerID)
+    {
+        monopoly = 1;
+        printf("%s owns the Yellow monopoly.\n", players[k].name);
+    }
+    /* Green */
+    if(properties[17].owner == players[k].playerID &&
+       properties[18].owner == players[k].playerID &&
+       properties[19].owner == players[k].playerID)
+    {
+        monopoly = 1;
+        printf("%s owns the Green monopoly.\n", players[k].name);
+    }
+    /* Dark Blue */
+    if(properties[20].owner == players[k].playerID &&
+       properties[21].owner == players[k].playerID)
+    {
+        monopoly = 1;
+        printf("%s owns the Dark Blue monopoly.\n", players[k].name);
     }
 }
