@@ -209,21 +209,21 @@ void utilityBuyRent(int playerSquare, int k)
                 if(utilities[0].hasOwner && utilities[1].hasOwner &&
                    utilities[0].owner == utilities[1].owner)
                 {
-                    utilities[l].rent = 10 * ( players[k].lastRoll1 + players[k].lastRoll2);
+                    utilities[l].currentRent = 10 * ( players[k].lastRoll1 + players[k].lastRoll2);
                 }
                 else
                 {
-                    utilities[l].rent = 4 * ( players[k].lastRoll1 + players[k].lastRoll2);
+                    utilities[l].currentRent = 4 * ( players[k].lastRoll1 + players[k].lastRoll2);
                 }
                 if(utilities[l].owner != players[k].playerID)
                 {
                     printf("%s is already owned.\n", utilities[l].name);
                     printf("%s landed on %s \n", players[k].name, utilities[l].name);
-                    printf("Rent paid : %d \n", utilities[l].rent);
+                    printf("Rent paid : %d \n", utilities[l].currentRent);
                     printf("Owner : %s \n\n", players[utilities[l].owner].name);
-                    players[k].money -= utilities[l].rent;
-                    players[k].taxableMoney -= utilities[l].rent;
-                    players[utilities[l].owner].money += utilities[l].rent;
+                    players[k].money -= utilities[l].currentRent;
+                    players[k].taxableMoney -= utilities[l].currentRent;
+                    players[utilities[l].owner].money += utilities[l].currentRent;
                 }
                 
             }
@@ -247,73 +247,3 @@ void payTax(int playerSquare ,int k)
     }
 }
 
-void checkMonopoly(int k)
-{
-    int monopoly = 0;
-
-    /* Brown */
-    if(properties[0].owner == players[k].playerID &&
-       properties[1].owner == players[k].playerID)
-    {
-        monopoly = 1;
-        printf("%s owns the Brown monopoly.\n", players[k].name);
-    }
-
-    /* Light Blue */
-    if(properties[2].owner == players[k].playerID &&
-       properties[3].owner == players[k].playerID &&
-       properties[4].owner == players[k].playerID)
-    {
-        monopoly = 1;
-        printf("%s owns the Light Blue monopoly.\n", players[k].name);
-    }
-
-    /* Pink */
-    if(properties[5].owner == players[k].playerID &&
-       properties[6].owner == players[k].playerID &&
-       properties[7].owner == players[k].playerID)
-    {
-        monopoly = 1;
-        printf("%s owns the Pink monopoly.\n", players[k].name);
-    }
-
-    /* Orange */
-    if(properties[8].owner == players[k].playerID &&
-       properties[9].owner == players[k].playerID &&
-       properties[10].owner == players[k].playerID)
-    {
-        monopoly = 1;
-        printf("%s owns the Orange monopoly.\n", players[k].name);
-    }
-    /* Red */
-    if(properties[11].owner == players[k].playerID &&
-       properties[12].owner == players[k].playerID &&
-       properties[13].owner == players[k].playerID)
-    {
-        monopoly = 1;
-        printf("%s owns the Red monopoly.\n", players[k].name);
-    }
-    /* Yellow */
-    if(properties[14].owner == players[k].playerID &&
-       properties[15].owner == players[k].playerID &&
-       properties[16].owner == players[k].playerID)
-    {
-        monopoly = 1;
-        printf("%s owns the Yellow monopoly.\n", players[k].name);
-    }
-    /* Green */
-    if(properties[17].owner == players[k].playerID &&
-       properties[18].owner == players[k].playerID &&
-       properties[19].owner == players[k].playerID)
-    {
-        monopoly = 1;
-        printf("%s owns the Green monopoly.\n", players[k].name);
-    }
-    /* Dark Blue */
-    if(properties[20].owner == players[k].playerID &&
-       properties[21].owner == players[k].playerID)
-    {
-        monopoly = 1;
-        printf("%s owns the Dark Blue monopoly.\n", players[k].name);
-    }
-}

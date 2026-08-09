@@ -58,6 +58,7 @@ struct property
     int isInsured;
     int houseCount;
     int hotelCount;
+    int repairCost;
 
 };
 extern struct property properties[22];
@@ -94,6 +95,7 @@ struct player
     int lastRoll2;
     int playerRound;
     int playerTurn;
+    int obtainableMaximumLoan;
 };
 extern struct player players[4];
 
@@ -108,6 +110,7 @@ struct railway {
     int owner;              // -1 = unowned, else player index
     int hasOwner;
     int isMortgaged;
+    int netWorth;
 
 };
 extern struct railway railways[4];
@@ -121,7 +124,8 @@ struct utility {
     int owner;              // -1 = unowned, else player index
     int hasOwner;
     int isMortgaged;
-    int rent;
+    int baseRent;
+    int currentRent;
 
 };
 extern struct utility utilities[2];
@@ -150,11 +154,36 @@ enum disasterType {
 
 struct Insurance {
     enum insurancePolicyType insurance_policy;
+    int insurancePremium;
     int coverage_disaster_types[7];
     int installment_percentage;
     int coverage_percentage;
 };
+extern struct Insurance insurance[3];
 
+struct Bidding{
+    int currentBid;
+    int highestBidder;
+    int activePlayers[4];
+};
+
+extern struct Bidding bidding;
+
+struct gameData {
+    int gameRound;
+    int bankruptedPlayerCount;
+};
+
+extern struct gameData gameInfo;
+
+struct loan {
+    int loanAmount;
+    int interestRate;
+    int repaymentPeriod;
+    int remainingRepaymentPeriod;
+    int isActive;
+};
+extern struct loan playerLoans[4];
 
 
 #endif 

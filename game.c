@@ -7,6 +7,8 @@
 #include "board.h"
 #include "buyandrent.h"
 #include "buildings.h"
+#include "inflation.h"
+#include "events.h"
 
 void startingMasage()
 {
@@ -86,14 +88,14 @@ while(priority <= 4)
 
 void playGame()
 {
-    int gameRound = 0;
-    int bankruptedPlayerCount = 0;
+    gameInfo.gameRound = 0;
+    gameInfo.bankruptedPlayerCount = 0;
 
     printf("\n*******************************\n");
-    printf("Game Round %d Starts\n", gameRound + 1);
+    printf("Game Round %d Starts\n", gameInfo.gameRound + 1);
     printf("*******************************\n\n");
 
-    while(gameRound < 5)
+    while(gameInfo.gameRound < 5)
     {
         for(int ongoingPlayer = 1; ongoingPlayer <= 4; ongoingPlayer++)
         {
@@ -180,7 +182,7 @@ void playGame()
                             }
                             playerConstruction(k);
                             checkMonopoly(k);
-                            playerBankrupt(k, &bankruptedPlayerCount);
+                            playerBankrupt(k, &gameInfo.bankruptedPlayerCount);
                         }
                     }
                 }
@@ -198,7 +200,7 @@ void playGame()
                 continue;
             }
 
-            if(players[i].playerRound <= gameRound)
+            if(players[i].playerRound <= gameInfo.gameRound)
             {
                 completed = 0;
                 break;
@@ -207,16 +209,19 @@ void playGame()
 
         if(completed)
         {
-            gameRound++;
+            gameInfo.gameRound++;
+            inflation(gameInfo.gameRound);
+            economicEvents(gameInfo.gameRound);
+            printf("\n\n");
 
             printf("=========================================\n");
-            printf("Game Round %d Completed\n", gameRound);
+            printf("Game Round %d Completed\n", gameInfo.gameRound);
             printf("=========================================\n\n");
 
-            if(gameRound < 5)
+            if(gameInfo.gameRound < 5)
             {
                 printf("\n*******************************\n");
-                printf("Game Round %d Starts\n", gameRound + 1);
+                printf("Game Round %d Starts\n", gameInfo.gameRound + 1);
                 printf("*******************************\n\n");
             }
         }
