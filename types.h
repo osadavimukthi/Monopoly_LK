@@ -55,14 +55,27 @@ struct property
     int hasOwner;
     int owner;
     int isMortgaged;
+    int isLoanLocked;
     int isInsured;
     int houseCount;
     int hotelCount;
     int repairCost;
+    int propertyAge;
+    int depreciationPercent;
+    int auctionStartingPrice;
+
 
 };
 extern struct property properties[22];
 
+struct propertyColor{
+    enum propertyColorGroup color;
+    int propertyCount;    
+    int marketBoomRound;
+    int marketDeclineRound;
+};
+
+extern struct propertyColor propertyColors[8];
 struct square
 {
     char name[50];
@@ -96,6 +109,9 @@ struct player
     int playerRound;
     int playerTurn;
     int obtainableMaximumLoan;
+    int currentLoan;
+    int loanRound;
+    int loanInterestRate;
 };
 extern struct player players[4];
 
@@ -110,6 +126,7 @@ struct railway {
     int owner;              // -1 = unowned, else player index
     int hasOwner;
     int isMortgaged;
+    int isLoanLocked;
     int netWorth;
 
 };
@@ -124,6 +141,7 @@ struct utility {
     int owner;              // -1 = unowned, else player index
     int hasOwner;
     int isMortgaged;
+    int isLoanLocked;
     int baseRent;
     int currentRent;
 
@@ -172,18 +190,37 @@ extern struct Bidding bidding;
 struct gameData {
     int gameRound;
     int bankruptedPlayerCount;
+    int previousEconomicEvent;
+    int currentEconomicEvent;
+    int previousGovernmentRegulation;
+    int currentGovernmentRegulation;
+    int previousMarketBoomColor;
+    int currentMarketBoomColor;
+    int previousMarketDeclineColor;
+    int currentMarketDeclineColor;
+
+
 };
 
 extern struct gameData gameInfo;
 
-struct loan {
-    int loanAmount;
+struct rate {
     int interestRate;
-    int repaymentPeriod;
-    int remainingRepaymentPeriod;
-    int isActive;
+    int incomeTaxRate;
 };
-extern struct loan playerLoans[4];
+extern struct rate rates;
 
+struct monopoly{
+    int monopolyColor;
+    int monopolyCount;
+    int hasOwner;
+    int owner;
+};
 
+extern struct monopoly monopolies[8];
+/* Function prototypes for finance-related operations */
+
+struct eventCardRound{
+    int tourismHype;
+};
 #endif 

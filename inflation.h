@@ -1,9 +1,9 @@
 #ifndef INFLATION_H
 #define INFLATION_H
 
-void propertyInflation();
-void insuaranceInflation();
-void loanInflation();
+void propertyInflation(int randomPercentage);
+void insuaranceInflation(int randomPercentage);
+void loanInflation(int randomPercentage);
 void inflation(int gameRound);
 
 #endif

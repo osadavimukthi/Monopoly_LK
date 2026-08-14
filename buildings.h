@@ -1,8 +1,8 @@
 #ifndef _BUILDINGS_H
 #define _BUILDINGS_H
 
-void checkMonopoly(int k);
-int checkPropertyMonopoly(int k, int i);
-void buildHouse(int k, int squareNumber);
+int constructHouse(int k, int propertyIndex);
+int constructHotel(int k, int propertyIndex);
+int checkMonopoly(int playerID, int colorGroup);
 
 #endif // _BUILDINGS_H
