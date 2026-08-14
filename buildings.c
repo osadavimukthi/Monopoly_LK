@@ -74,6 +74,12 @@ int checkMonopoly(int playerID, int colorGroup)
 }
 int constructHouse(int k, int propertyIndex)
 {
+    if(properties[propertyIndex].isClosed == 1)
+    {
+        printf("%s is closed for business. Cannot construct house.\n", properties[propertyIndex].name);
+        return 0;
+    }
+
     if(players[k].money < properties[propertyIndex].houseConstructionCost)
     {
         return 0;
@@ -86,7 +92,11 @@ int constructHouse(int k, int propertyIndex)
 
     players[k].money -= properties[propertyIndex].houseConstructionCost;
 
-    properties[propertyIndex].houseCount++;
+properties[propertyIndex].houseCount++;
+
+properties[propertyIndex].buildingCondition[
+    properties[propertyIndex].houseCount - 1
+] = 100;
 
     switch(properties[propertyIndex].houseCount)
     {
@@ -142,8 +152,15 @@ int constructHouse(int k, int propertyIndex)
 
     return 1;
 }
+
 int constructHotel(int k, int propertyIndex)
 {
+    if(properties[propertyIndex].isClosed == 1)
+    {   
+        printf("%s is closed for business. Cannot construct hotel.\n", properties[propertyIndex].name);
+        return 0;
+    }
+
     if(players[k].money < properties[propertyIndex].hotelConstructionCost)
     {
         return 0;
@@ -163,6 +180,7 @@ int constructHotel(int k, int propertyIndex)
 
     properties[propertyIndex].houseCount = 0;
     properties[propertyIndex].hotelCount = 1;
+    properties[propertyIndex].buildingCondition[0] = 100;
 
     properties[propertyIndex].currentRent =
         properties[propertyIndex].currentRent * 10 / 7;

@@ -1,10 +1,11 @@
 #ifndef GAME_H
 #define GAME_H
 
-//int rollDice();
-void startingMasage();
-int rollDice();
-void setPlayOrder();
-void playGame();
-void startGame();
+void startingMessage(void);
+int rollDice(void);
+void setPlayOrder(void);
+void playGame(void);
+void startGame(void);
+void endGame(void);
+
 #endif

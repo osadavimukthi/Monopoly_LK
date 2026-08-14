@@ -1273,3 +1273,111 @@ if(players[highestBidder].ownedPropertiesCount < 22)
 
     printf("========================================\n\n");
 }
+
+void manageInsurance(int playerID)
+{
+    int i;
+    int policyType;
+
+    for(i = 0; i < 22; i++)
+    {
+        if(properties[i].owner != players[playerID].playerID)
+        {
+            continue;
+        }
+
+        /*
+         * Only insure developed properties.
+         */
+        if(properties[i].houseCount == 0 &&
+           properties[i].hotelCount == 0)
+        {
+            continue;
+        }
+
+        /*
+         * Aggressive Investor:
+         * Basic insurance for houses,
+         * Comprehensive for hotels.
+         */
+        if(players[playerID].playerID ==
+           aggresiveInvestor)
+        {
+            if(properties[i].hotelCount > 0)
+            {
+                policyType =
+                    comprehensiveInsurance;
+            }
+            else
+            {
+                policyType =
+                    basicPropertyInsurance;
+            }
+        }
+
+        /*
+         * Conservative Banker:
+         * Comprehensive insurance for every
+         * developed property.
+         */
+        else if(players[playerID].playerID ==
+                conservativeBanker)
+        {
+            policyType =
+                comprehensiveInsurance;
+        }
+
+        /*
+         * Risk Taker:
+         * Only purchases insurance if the player
+         * has already suffered a financial loss.
+         *
+         * For now, use low cash as the trigger.
+         */
+        else if(players[playerID].playerID ==
+                riskTaker)
+        {
+            if(players[playerID].money >= 30000)
+            {
+                continue;
+            }
+
+            policyType =
+                comprehensiveInsurance;
+        }
+
+        /*
+         * Opportunistic Trader:
+         * Insure high-value developments.
+         */
+        else
+        {
+            if(properties[i].currentPrice < 7000)
+            {
+                continue;
+            }
+
+            policyType =
+                comprehensiveInsurance;
+        }
+
+        /*
+         * Do not buy another policy if the
+         * property is already insured.
+         */
+        if(properties[i].isInsured)
+        {
+            continue;
+        }
+
+        if(purchaseInsurance(playerID,
+                             i,
+                             policyType))
+        {
+            /*
+             * One insurance purchase per visit.
+             */
+            break;
+        }
+    }
+}

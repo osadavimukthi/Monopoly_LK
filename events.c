@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include "time.h"
 #include "types.h"
+#include "events.h"
+#include "finance.h"
 
 void setNewEconomicEventt()
 {
@@ -774,222 +776,1332 @@ void updateMarketRounds(int gameRound)
 
 
 
+struct eventCardData eventCardData[4] = {0};
+
+int eventCards[20];
+int eventCardFront = 0;
 
 
-/*
 void shuffleEventCards()
 {
-    int numbers[20] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
-    int i, j;
-    int duplicate;
-
-    srand(time(NULL));
+    int i;
+    int j;
+    int temp;
 
     for(i = 0; i < 20; i++)
     {
-        duplicate = 1;
+        eventCards[i] = i + 1;
+    }
 
-        while(duplicate == 1)
+    for(i = 19; i > 0; i--)
+    {
+        j = rand() % (i + 1);
+
+        temp = eventCards[i];
+        eventCards[i] = eventCards[j];
+        eventCards[j] = temp;
+    }
+
+    eventCardFront = 0;
+}
+
+void initializeEventCards()
+{
+    int i;
+    int j;
+
+    for(i = 0; i < 4; i++)
+    {
+        for(j = 0; j < 20; j++)
         {
-            numbers[i] = rand() % 20 + 1;
-            duplicate = 0;
+            eventCardData[i].isActive[j] = 0;
+            eventCardData[i].startRound[j] = 0;
+        }
+    }
 
-            for(j = 0; j < i; j++)
+    shuffleEventCards();
+}
+
+void stockMarketRise()
+{
+    int i;
+
+    for(i = 0; i < 22; i++)
+    {
+        properties[i].currentPrice =
+            properties[i].currentPrice * 110 / 100;
+    }
+}
+
+void economicDownturn()
+{
+    int i;
+
+    for(i = 0; i < 22; i++)
+    {
+        properties[i].currentPrice =
+            properties[i].currentPrice * 85 / 100;
+    }
+}
+
+
+void portExpansion()
+{
+    int i;
+
+    for(i = 0; i < 4; i++)
+    {
+        railways[i].currentPrice =
+            railways[i].currentPrice * 120 / 100;
+    }
+}
+
+void foreignFunding()
+{
+    int i;
+
+    for(i = 0; i < 22; i++)
+    {
+        properties[i].currentPrice =
+            properties[i].currentPrice * 115 / 100;
+    }
+}
+
+void pickEventCard(int playerID)
+{
+    int card;
+
+    card = eventCards[eventCardFront];
+
+    printf("\n=========================================\n");
+    printf("National Event Card\n");
+    printf("=========================================\n");
+
+    printf("%s drew Event Card %d.\n\n",
+           players[playerID].name,
+           card);
+
+    switch(card)
+    {
+        case 1:
+
+            printf("Event Card : Tourism Hype\n");
+            printf("Hotels earn double rent for 5 rounds.\n");
+
+            eventCardData[playerID].isActive[0] = 1;
+            eventCardData[playerID].startRound[0] =
+                players[playerID].playerRound;
+
+            break;
+
+
+        case 2:
+
+            printf("Event Card : Fuel Shortage\n");
+            printf("Railway rent doubles for 5 rounds.\n");
+
+            eventCardData[playerID].isActive[0] = 1;
+eventCardData[playerID].startRound[0] =
+    players[playerID].playerRound;
+
+            break;
+
+
+        case 3:
+
+            printf("Event Card : Heavy Floods\n");
+
+            //heavyFloods();
+
+            break;
+
+
+        case 4:
+
+            printf("Event Card : Political Rally\n");
+
+            politicalRally();
+
+            break;
+
+
+        case 5:
+
+            printf("Event Card : Stock Market Rise\n");
+            printf("All property values increase by 10%%.\n");
+
+            stockMarketRise();
+
+            break;
+
+
+        case 6:
+
+            printf("Event Card : Economic Downturn\n");
+            printf("Property values decrease by 15%%.\n");
+
+            economicDownturn();
+
+            break;
+
+
+        case 7:
+
+            printf("Event Card : Housing Subsidy\n");
+            printf("House construction cost reduced by 30%%.\n");
+
+            eventCardData[playerID].isActive[6] = 1;
+eventCardData[playerID].startRound[6] =
+    players[playerID].playerRound;
+
+            break;
+
+
+        case 8:
+
+            printf("Event Card : Interest Rate Cut\n");
+            printf("Loan interest reduced by 2%%.\n");
+
+            eventCardData[playerID].isActive[7] = 1;
+eventCardData[playerID].startRound[7] =
+    players[playerID].playerRound;
+
+            break;
+
+
+        case 9:
+
+            printf("Event Card : Interest Rate Increase\n");
+            printf("Loan interest increased by 2%%.\n");
+
+            eventCardData[playerID].isActive[8] = 1;
+eventCardData[playerID].startRound[8] =
+    players[playerID].playerRound;
+
+            break;
+
+
+        case 10:
+
+            printf("Event Card : Tax Amnesty\n");
+
+            taxAmnesty();
+
+            break;
+
+
+        case 11:
+
+            printf("Event Card : Power Failure\n");
+            printf("Utility income halved for 3 rounds.\n");
+
+            eventCardData[playerID].isActive[10] = 1;
+eventCardData[playerID].startRound[10] =
+    players[playerID].playerRound;
+
+            break;
+
+
+        case 12:
+
+            printf("Event Card : Foreign Funding\n");
+            printf("Commercial property values increase by 15%%.\n");
+
+            foreignFunding();
+
+            break;
+
+
+        case 13:
+
+            printf("Event Card : Port Expansion\n");
+            printf("Railway station values increase by 20%%.\n");
+
+            portExpansion();
+
+            break;
+
+
+        case 14:
+
+            printf("Event Card : Festival Season\n");
+            printf("Hotels receive 50%% additional rent.\n");
+
+            eventCardData[playerID].isActive[13] = 1;
+eventCardData[playerID].startRound[13] =
+    players[playerID].playerRound;
+
+            break;
+
+
+        case 15:
+
+            printf("Event Card : Labour Strike\n");
+            printf("Construction suspended for 2 rounds.\n");
+
+            eventCardData[playerID].isActive[14] = 1;
+eventCardData[playerID].startRound[14] =
+    players[playerID].playerRound;
+
+            break;
+
+
+        case 16:
+
+            printf("Event Card : Insurance Discount\n");
+            printf("Insurance premiums reduced by 20%%.\n");
+
+            eventCardData[playerID].isActive[15] = 1;
+eventCardData[playerID].startRound[15] =
+    players[playerID].playerRound;
+
+            break;
+
+
+        case 17:
+
+            printf("Event Card : Property Revaluation\n");
+
+            propertyRevaluation();
+
+            break;
+
+
+        case 18:
+
+            printf("Event Card : Currency Depreciation\n");
+            printf("Construction costs increase by 10%%.\n");
+
+            eventCardData[playerID].isActive[17] = 1;
+eventCardData[playerID].startRound[17] =
+    players[playerID].playerRound;
+
+            break;
+
+
+        case 19:
+
+            printf("Event Card : Government Grant\n");
+
+            governmentGrant();
+
+            break;
+
+
+        case 20:
+
+            printf("Event Card : National Disaster\n");
+
+            nationalDisaster();
+
+            break;
+    }
+
+    /*
+     * Return the card to the bottom of the deck.
+     */
+    eventCardFront++;
+
+    if(eventCardFront >= 20)
+    {
+        eventCardFront = 0;
+        shuffleEventCards();
+    }
+
+    printf("=========================================\n\n");
+}
+
+void politicalRally()
+{
+    int propertyIndex;
+
+    propertyIndex = rand() % 22;
+
+    properties[propertyIndex].isClosed = 1;
+    properties[propertyIndex].closedRounds = 2;
+
+    printf("%s has been closed for 2 rounds.\n\n",
+           properties[propertyIndex].name);
+}
+
+void taxAmnesty()
+{
+    int i;
+
+    for(i = 0; i < 4; i++)
+    {
+        if(players[i].isBankrupt == 0)
+        {
+            players[i].money += 2000;
+        }
+    }
+
+    printf("Each player receives LKR 2000.\n\n");
+}
+
+void governmentGrant()
+{
+    int playerID;
+
+    playerID = rand() % 4;
+
+    while(players[playerID].isBankrupt == 1)
+    {
+        playerID = rand() % 4;
+    }
+
+    players[playerID].money += 5000;
+
+    printf("%s receives LKR 5000.\n\n",
+           players[playerID].name);
+}
+
+void nationalDisaster()
+{
+    int developed[22];
+    int count = 0;
+    int i;
+    int propertyIndex;
+    int disaster;
+    int compensation;
+    int repairCost;
+    int owner;
+
+    /*
+     * Find all developed properties.
+     */
+    for(i = 0; i < 22; i++)
+    {
+        if(properties[i].houseCount > 0 ||
+           properties[i].hotelCount > 0)
+        {
+            /*
+             * Do not select a property that is
+             * already damaged.
+             */
+            if(properties[i].isDisasterDamaged == 0)
             {
-                if(numbers[i] == numbers[j])
-                {
-                    duplicate = 1;
-                    break;
-                }
+                developed[count] = i;
+                count++;
+            }
+        }
+    }
+
+    if(count == 0)
+    {
+        printf("\nNational Disaster\n");
+        printf("No developed property was available for the disaster.\n\n");
+        return;
+    }
+
+    /*
+     * Select random developed property.
+     */
+    propertyIndex =
+        developed[rand() % count];
+
+    /*
+     * Rule-LK 10:
+     * Fire
+     * Flood
+     * Riot
+     * Building Collapse
+     * Electrical Failure
+     */
+    disaster =
+        rand() % 5;
+
+    /*
+     * Store disaster information.
+     */
+    properties[propertyIndex].isDisasterDamaged = 1;
+
+    properties[propertyIndex].disasterType =
+        disaster;
+
+    /*
+     * Use the property's current repair cost.
+     */
+    repairCost =
+        properties[propertyIndex].repairCost;
+
+    properties[propertyIndex].disasterRepairCost =
+        repairCost;
+
+    owner =
+        properties[propertyIndex].owner;
+
+    printf("\n");
+    printf("=========================================\n");
+    printf("              NATIONAL DISASTER\n");
+    printf("=========================================\n");
+
+    printf("Affected Property : %s\n",
+           properties[propertyIndex].name);
+
+    printf("Owner : %s\n",
+           players[owner].name);
+
+    printf("Repair Cost : LKR %d\n",
+           repairCost);
+
+    switch(disaster)
+    {
+        case fire:
+            printf("Disaster : FIRE\n");
+            break;
+
+        case flood:
+            printf("Disaster : FLOOD\n");
+            break;
+
+        case riot:
+            printf("Disaster : RIOT\n");
+            break;
+
+        case buildingCollapse:
+            printf("Disaster : BUILDING COLLAPSE\n");
+            break;
+
+        case electricalFailure:
+            printf("Disaster : ELECTRICAL FAILURE\n");
+            break;
+    }
+
+    /*
+     * Calculate insurance compensation.
+     */
+    compensation =
+        calculateInsuranceCompensation(
+            propertyIndex,
+            disaster
+        );
+
+    if(compensation > 0)
+    {
+        players[owner].money += compensation;
+
+        printf("Insurance Claim : APPROVED\n");
+        printf("Compensation Paid : LKR %d\n",
+               compensation);
+
+        if(properties[propertyIndex].insurancePolicyType ==
+           BusinessInterruptionInsurance)
+        {
+            printf("Business interruption compensation included.\n");
+            printf("Lost rental income compensation : 5 rounds\n");
+        }
+    }
+    else
+    {
+        printf("Insurance Claim : NOT COVERED\n");
+
+        /*
+         * Uninsured property owner must pay
+         * the complete repair cost if possible.
+         */
+        if(players[owner].money >= repairCost)
+        {
+            players[owner].money -= repairCost;
+
+            properties[propertyIndex].isDisasterDamaged = 0;
+            properties[propertyIndex].disasterRepairCost = 0;
+            properties[propertyIndex].disasterType = -1;
+
+            printf("Repair Cost Paid : LKR %d\n",
+                   repairCost);
+
+            printf("Property repaired immediately.\n");
+        }
+        else
+        {
+            printf("%s does not have enough money to repair the property.\n",
+                   players[owner].name);
+
+            printf("Property remains damaged.\n");
+            printf("No rent can be collected until repaired.\n");
+        }
+    }
+
+    printf("=========================================\n\n");
+}
+/*
+void propertyRevaluation()
+{
+    int group;
+    int i;
+
+    group = rand() % 8;
+
+    printf("Property Group %d has been revalued by 15%%.\n",
+           group);
+
+    for(i = 0; i < 22; i++)
+    {
+        if(properties[i].colorGroup == group)
+        {
+            properties[i].currentPrice =
+                properties[i].currentPrice * 115 / 100;
+        }
+    }
+}
+*/
+void propertyRevaluation()
+{
+    int group;
+    int i;
+
+    group = rand() % 8;
+
+    printf("Property Group %d has been revalued by 15%%.\n",
+           group);
+
+    for(i = 0; i < 22; i++)
+    {
+        if(properties[i].colorGroup == group)
+        {
+            properties[i].currentPrice =
+                properties[i].currentPrice * 115 / 100;
+        }
+    }
+}
+
+void handleEventCard()
+{
+    int i;
+
+    for(i = 0; i < 22; i++)
+    {
+        if(properties[i].isClosed == 1)
+        {
+            properties[i].closedRounds--;
+
+            if(properties[i].closedRounds <= 0)
+            {
+                properties[i].isClosed = 0;
+                properties[i].closedRounds = 0;
+
+                printf("%s is no longer closed.\n\n",
+                       properties[i].name);
             }
         }
     }
 }
 
-void pickEventCard()
+int getEventCardDuration(int card)
 {
-    switch(eventCards[0])
+    switch(card)
+    {
+        case 0:
+            return 5;
+
+        case 1:
+            return 5;
+
+        case 6:
+            return 15;
+
+        case 7:
+            return 15;
+
+        case 8:
+            return 15;
+
+        case 10:
+            return 3;
+
+        case 13:
+            return 15;
+
+        case 14:
+            return 2;
+
+        case 15:
+            return 15;
+
+        case 17:
+            return 15;
+    }
+
+    return 0;
+}
+
+void updatePlayerEventCards(int playerID)
 {
-    case 1:
-       
-        printf("Event Card : Tourism Hype\n");
-        printf("Hotels earn double rent for 5 rounds.\n");
-        eventCardRound.tourismHype = 0;
-        
-        break;
+    int i;
 
-
-    case 2:
-    
-        printf("Event Card : Fuel Shortage\n");
-        printf("Railway rent doubles for 5 rounds.\n");
-
-      
-        break;
-
-
-    case 3:
-   
-        printf("Event Card : Heavy Floods\n");
-
-      
-        break;
-
-
-    case 4:
-  
-        printf("Event Card : Political Rally\n");
-
-        break;
-
-
-    case 5:
-        
-        printf("Event Card : Stock Market Rise\n");
-        printf("All property values increase by 10%%.\n");
-
-        
-        break;
-
-
-    case 6:
-  
-        printf("Event Card : Economic Downturn\n");
-        printf("Property values decrease by 15%%.\n");
-
-        break;
-
-
-    case 7:
-    
-        printf("Event Card : Housing Subsidy\n");
-        printf("House construction cost reduced by 30%%.\n");
-
-        break;
-
-
-    case 8:
-
-        printf("Event Card : Interest Rate Cut\n");
-        printf("Loan interest reduced by 2%%.\n");
-
-        break;
-
-
-    case 9:
-   
-        printf("Event Card : Interest Rate Increase\n");
-        printf("Loan interest increased by 2%%.\n");
-
-        break;
-
-
-    case 10:
-   
-        printf("Event Card : Tax Amnesty\n");
-
-        for(i = 0; i < 4; i++)
+    for(i = 0; i < 20; i++)
+    {
+        if(eventCardData[playerID].isActive[i] == 1)
         {
-            if(players[i].isBankrupt == 0)
+            if(players[playerID].playerRound >=
+               eventCardData[playerID].startRound[i] +
+               getEventCardDuration(i))
             {
-                players[i].money += 2000;
+                eventCardData[playerID].isActive[i] = 0;
+                eventCardData[playerID].startRound[i] = 0;
+
+                printf("%s's Event Card %d effect has expired.\n\n",
+                       players[playerID].name,
+                       i + 1);
             }
         }
+    }
+}
 
-        printf("Each player receives LKR 2000.\n");
-        break;
+void regionalDevelopmentCards()
+{   
+    int regionalDevelopmentCards = rand() % 12 + 1;
+    int a = 0;
 
+    switch(regionalDevelopmentCards)
+    {
+        case 1:
+            printf("Regional Development Card : Southern Tourism Boom\n");
+            printf("Rental income of Galle Fort, Unawatuna and Hikkaduwa increased by 40%%\n");
+            gameInfo.currentRegionalDevelopmentCard = 1;
+            a = 0;
+            while(a < 22)
+            {
+                if(properties[a].squareNumber == 26)
+                {
+                    properties[a].currentRent =
+                        properties[a].currentRent * 140 / 100;
+                }
 
-    case 11:
-     
-        printf("Event Card : Power Failure\n");
-        printf("Utility income halved for 3 rounds.\n");
+                if(properties[a].squareNumber == 27)
+                {
+                    properties[a].currentRent =
+                        properties[a].currentRent * 140 / 100;
+                }
 
-        break;
+                if(properties[a].squareNumber == 29)
+                {
+                    properties[a].currentRent =
+                        properties[a].currentRent * 140 / 100;
+                }
 
-
-    case 12:
-  
-        printf("Event Card : Foreign Funding\n");
-        printf("Commercial property values increase by 15%%.\n");
-
-        break;
-
-
-    case 13:
-   
-        printf("Event Card : Port Expansion\n");
-        printf("Railway station values increase by 20%%.\n");
-
-        break;
-
-
-    case 14:
-  
-        printf("Event Card : Festival Season\n");
-        printf("Hotels receive 50%% additional rent.\n");
-
-        break;
-
-
-    case 15:
-      
-        printf("Event Card : Labour Strike\n");
-        printf("Construction suspended for 2 rounds.\n");
-
-        
-        break;
+                a++;
+            }
+            break;
 
 
-    case 16:
-       
-        printf("Event Card : Insurance Discount\n");
-        printf("Insurance premiums reduced by 20%%.\n");
+        case 2:
+            printf("Regional Development Card : Port City Expansion\n");
+            printf("Pettah, Maradana and Colombo Fort Station values increased by 25%%\n");
+            gameInfo.currentRegionalDevelopmentCard = 2;
+            a = 0;
+            while(a < 22)
+            {
+                if(properties[a].squareNumber == 1)
+                {
+                    properties[a].currentPrice =
+                        properties[a].currentPrice * 125 / 100;
+                }
 
-        
-        break;
+                if(properties[a].squareNumber == 3)
+                {
+                    properties[a].currentPrice =
+                        properties[a].currentPrice * 125 / 100;
+                }
+
+                a++;
+            }
+
+            railways[0].currentPrice =
+                railways[0].currentPrice * 125 / 100;
+
+            break;
 
 
-    case 17:
-       
-        printf("Event Card : Property Revaluation\n");
+        case 3:
+            printf("Regional Development Card : IT Industry Growth\n");
+            printf("Maharagama, Nugegoda and Kottawa values increased by 20%%\n");
+            gameInfo.currentRegionalDevelopmentCard = 3;
+            a = 0;
+            while(a < 22)
+            {
+                if(properties[a].squareNumber == 11)
+                {
+                    properties[a].currentPrice =
+                        properties[a].currentPrice * 120 / 100;
+                }
 
-        
-        break;
+                if(properties[a].squareNumber == 13)
+                {
+                    properties[a].currentPrice =
+                        properties[a].currentPrice * 120 / 100;
+                }
+
+                if(properties[a].squareNumber == 14)
+                {
+                    properties[a].currentPrice =
+                        properties[a].currentPrice * 120 / 100;
+                }
+
+                a++;
+            }
+            break;
 
 
-    case 18:
-       
-        printf("Event Card : Currency Depreciation\n");
-        printf("Construction costs increase by 10%%.\n");
+        case 4:
+            printf("Regional Development Card : Northern Development Programme\n");
+            printf("Jaffna Town, Nallur and Trincomalee values increased by 30%%\n");
+            gameInfo.currentRegionalDevelopmentCard = 4;
+            a = 0;
+            while(a < 22)
+            {
+                if(properties[a].squareNumber == 31)
+                {
+                    properties[a].currentPrice =
+                        properties[a].currentPrice * 130 / 100;
+                }
 
-        break;
+                if(properties[a].squareNumber == 32)
+                {
+                    properties[a].currentPrice =
+                        properties[a].currentPrice * 130 / 100;
+                }
+
+                if(properties[a].squareNumber == 34)
+                {
+                    properties[a].currentPrice =
+                        properties[a].currentPrice * 130 / 100;
+                }
+
+                a++;
+            }
+            break;
 
 
-    case 19:
-     
-        printf("Event Card : Government Grant\n");
+        case 5:
+            printf("Regional Development Card : Tea Export Boom\n");
+            printf("Nuwara Eliya value increased by 35%%\n");
+            gameInfo.currentRegionalDevelopmentCard = 5;
+            a = 0;
+            while(a < 22)
+            {
+                if(properties[a].squareNumber == 37)
+                {
+                    properties[a].currentPrice =
+                        properties[a].currentPrice * 135 / 100;
+                }
 
-        i = rand() % 4;
+                a++;
+            }
+            break;
 
-        while(players[i].isBankrupt == 1)
+
+        case 6:
+            printf("Regional Development Card : Airport Expansion\n");
+            printf("Negombo, Katunayake and Ja-Ela rents increased by 30%%\n");
+            gameInfo.currentRegionalDevelopmentCard = 6;
+            a = 0;
+            while(a < 22)
+            {
+                if(properties[a].squareNumber == 16)
+                {
+                    properties[a].currentRent =
+                        properties[a].currentRent * 130 / 100;
+                }
+
+                if(properties[a].squareNumber == 18)
+                {
+                    properties[a].currentRent =
+                        properties[a].currentRent * 130 / 100;
+                }
+
+                if(properties[a].squareNumber == 19)
+                {
+                    properties[a].currentRent =
+                        properties[a].currentRent * 130 / 100;
+                }
+
+                a++;
+            }
+            break;
+
+
+        case 7:
+            printf("Regional Development Card : University City Growth\n");
+            printf("Peradeniya and Kandy City values increased by 20%%\n");
+            gameInfo.currentRegionalDevelopmentCard = 7;
+            a = 0;
+            while(a < 22)
+            {
+                if(properties[a].squareNumber == 21)
+                {
+                    properties[a].currentPrice =
+                        properties[a].currentPrice * 120 / 100;
+                }
+
+                if(properties[a].squareNumber == 23)
+                {
+                    properties[a].currentPrice =
+                        properties[a].currentPrice * 120 / 100;
+                }
+
+                a++;
+            }
+            break;
+
+
+        case 8:
+            printf("Regional Development Card : Beach Pollution\n");
+            printf("Southern coastal property rents decreased by 30%%\n");
+            gameInfo.currentRegionalDevelopmentCard = 8;
+            a = 0;
+            while(a < 22)
+            {
+                if(properties[a].squareNumber == 26)
+                {
+                    properties[a].currentRent =
+                        properties[a].currentRent * 70 / 100;
+                }
+
+                if(properties[a].squareNumber == 27)
+                {
+                    properties[a].currentRent =
+                        properties[a].currentRent * 70 / 100;
+                }
+
+                if(properties[a].squareNumber == 29)
+                {
+                    properties[a].currentRent =
+                        properties[a].currentRent * 70 / 100;
+                }
+
+                a++;
+            }
+            break;
+
+
+        case 9:
+            printf("Regional Development Card : Flood Damage\n");
+            printf("Low-lying coastal property values decreased by 20%%\n");
+            gameInfo.currentRegionalDevelopmentCard = 9;
+            /*
+             * The assignment does not specify the exact
+             * low-lying coastal properties.
+             * Galle Fort, Unawatuna and Hikkaduwa are used here.
+             */
+
+            a = 0;
+            while(a < 22)
+            {
+                if(properties[a].squareNumber == 26)
+                {
+                    properties[a].currentPrice =
+                        properties[a].currentPrice * 80 / 100;
+                }
+
+                if(properties[a].squareNumber == 27)
+                {
+                    properties[a].currentPrice =
+                        properties[a].currentPrice * 80 / 100;
+                }
+
+                if(properties[a].squareNumber == 29)
+                {
+                    properties[a].currentPrice =
+                        properties[a].currentPrice * 80 / 100;
+                }
+
+                a++;
+            }
+            break;
+
+
+        case 10:
+            printf("Regional Development Card : Transport Strike\n");
+            printf("Railway revenue decreased by 40%%\n");
+            gameInfo.currentRegionalDevelopmentCard = 10;
+            a = 0;
+            while(a < 4)
+            {
+                railways[a].currentRent =
+                    railways[a].currentRent * 60 / 100;
+
+                a++;
+            }
+            break;
+
+
+        case 11:
+            printf("Regional Development Card : Electricity Tariff Increase\n");
+            printf("Utility rent increased by 25%%\n");
+            gameInfo.currentRegionalDevelopmentCard = 11;
+            /*
+             * CEB is square 12.
+             */
+            utilities[0].currentRent =
+                utilities[0].currentRent * 125 / 100;
+
+            break;
+
+
+        case 12:
+            printf("Regional Development Card : Water Shortage\n");
+            printf("Water utility revenue increased by 20%%\n");
+            printf("Surrounding property values decreased by 10%%\n");
+            gameInfo.currentRegionalDevelopmentCard = 12;
+            /*
+             * NWSDB is square 28.
+             */
+            utilities[1].currentRent =
+                utilities[1].currentRent * 120 / 100;
+
+            /*
+             * Surrounding properties of square 28:
+             * Unawatuna = 27
+             * Hikkaduwa = 29
+             */
+            a = 0;
+            while(a < 22)
+            {
+                if(properties[a].squareNumber == 27)
+                {
+                    properties[a].currentPrice =
+                        properties[a].currentPrice * 90 / 100;
+                }
+
+                if(properties[a].squareNumber == 29)
+                {
+                    properties[a].currentPrice =
+                        properties[a].currentPrice * 90 / 100;
+                }
+
+                a++;
+            }
+
+            break;
+    }
+}
+
+void resetCurrentRegionalDevelopmentCards(){
+    if(gameInfo.currentRegionalDevelopmentCard != -1)
+    {
+        if(gameInfo.currentRegionalDevelopmentCard == 1)
         {
-            i = rand() % 4;
+            int a = 0;
+            while(a < 22)
+            {
+                if(properties[a].squareNumber == 26)
+                {
+                    properties[a].currentRent =
+                        properties[a].currentRent * 100 / 140;
+                }
+
+                if(properties[a].squareNumber == 27)
+                {
+                    properties[a].currentRent =
+                        properties[a].currentRent * 100 / 140;
+                }
+
+                if(properties[a].squareNumber == 29)
+                {
+                    properties[a].currentRent =
+                        properties[a].currentRent * 100 / 140;
+                }
+
+                a++;
+            }
+        }
+        if(gameInfo.currentRegionalDevelopmentCard == 2)
+        {
+            int a = 0;
+            while(a < 22)
+            {
+                if(properties[a].squareNumber == 1)
+                {
+                    properties[a].currentPrice =
+                        properties[a].currentPrice * 100 / 125;
+                }
+
+                if(properties[a].squareNumber == 3)
+                {
+                    properties[a].currentPrice =
+                        properties[a].currentPrice * 100 / 125;
+                }
+
+                a++;
+            }
+
+            railways[0].currentPrice =
+                railways[0].currentPrice * 100 / 125;
+        }
+        if(gameInfo.currentRegionalDevelopmentCard == 3)
+        {
+            int a = 0;
+            while(a < 22)
+            {
+                if(properties[a].squareNumber == 11)
+                {
+                    properties[a].currentPrice =
+                        properties[a].currentPrice * 100 / 120;
+                }
+
+                if(properties[a].squareNumber == 13)
+                {
+                    properties[a].currentPrice =
+                        properties[a].currentPrice * 100 / 120;
+                }
+
+                if(properties[a].squareNumber == 14)
+                {
+                    properties[a].currentPrice =
+                        properties[a].currentPrice * 100 / 120;
+                }
+
+                a++;
+            }
+        }
+        if(gameInfo.currentRegionalDevelopmentCard == 4)
+        {
+            int a = 0;
+            while(a < 22)
+            {
+                if(properties[a].squareNumber == 31)
+                {
+                    properties[a].currentPrice =
+                        properties[a].currentPrice * 100 / 130;
+                }
+
+                if(properties[a].squareNumber == 32)
+                {
+                    properties[a].currentPrice =
+                        properties[a].currentPrice * 100 / 130;
+                }
+
+                if(properties[a].squareNumber == 34)
+                {
+                    properties[a].currentPrice =
+                        properties[a].currentPrice * 100 / 130;
+                }
+
+                a++;
+            }
+        }
+        if(gameInfo.currentRegionalDevelopmentCard == 5)
+        {
+            int a = 0;
+            while(a < 22)
+            {
+                if(properties[a].squareNumber == 37)
+                {
+                    properties[a].currentPrice =
+                        properties[a].currentPrice * 100 / 135;
+                }
+
+                a++;
+            }
+        }
+        if(gameInfo.currentRegionalDevelopmentCard == 6)
+        {
+            int a = 0;
+            while(a < 22)
+            {
+                if(properties[a].squareNumber == 16)
+                {
+                    properties[a].currentRent =
+                        properties[a].currentRent * 100 / 130;
+                }
+
+                if(properties[a].squareNumber == 18)
+                {
+                    properties[a].currentRent =
+                        properties[a].currentRent * 100 / 130;
+                }
+
+                if(properties[a].squareNumber == 19)
+                {
+                    properties[a].currentRent =
+                        properties[a].currentRent * 100 / 130;
+                }
+
+                a++;
+            }
+        }
+        if(gameInfo.currentRegionalDevelopmentCard == 7)
+        {
+            int a = 0;
+            while(a < 22)
+            {
+                if(properties[a].squareNumber == 21)
+                {
+                    properties[a].currentPrice =
+                        properties[a].currentPrice * 100 / 120;
+                }
+
+                if(properties[a].squareNumber == 23)
+                {
+                    properties[a].currentPrice =
+                        properties[a].currentPrice * 100 / 120;
+                }
+
+                a++;
+            }
+        }
+        if(gameInfo.currentRegionalDevelopmentCard == 8)
+        {
+            int a = 0;
+            while(a < 22)
+            {
+                if(properties[a].squareNumber == 26)
+                {
+                    properties[a].currentRent =
+                        properties[a].currentRent * 100 / 70;
+                }
+
+                if(properties[a].squareNumber == 27)
+                {
+                    properties[a].currentRent =
+                        properties[a].currentRent * 100 / 70;
+                }
+
+                if(properties[a].squareNumber == 29)
+                {
+                    properties[a].currentRent =
+                        properties[a].currentRent * 100 / 70;
+                }
+
+                a++;
+            }
+        }
+        if(gameInfo.currentRegionalDevelopmentCard == 9)
+        {
+            int a = 0;
+            while(a < 22)
+            {
+                if(properties[a].squareNumber == 26)
+                {
+                    properties[a].currentPrice =
+                        properties[a].currentPrice * 100 / 80;
+                }
+
+                if(properties[a].squareNumber == 27)
+                {
+                    properties[a].currentPrice =
+                        properties[a].currentPrice * 100 / 80;
+                }
+
+                if(properties[a].squareNumber == 29)
+                {
+                    properties[a].currentPrice =
+                        properties[a].currentPrice * 100 / 80;
+                }
+
+                a++;
+            }
+        }
+        if(gameInfo.currentRegionalDevelopmentCard == 10)
+        {
+            int a = 0;
+            while(a < 4)
+            {
+                railways[a].currentRent =
+                    railways[a].currentRent * 100 / 60;
+
+                a++;
+            }
+        }
+        if(gameInfo.currentRegionalDevelopmentCard == 11)
+        {
+            utilities[0].currentRent =
+                utilities[0].currentRent * 100 / 125;
+        }
+        if(gameInfo.currentRegionalDevelopmentCard == 12)
+        {
+            utilities[1].currentRent =
+                utilities[1].currentRent * 100 / 120;
+
+            int a = 0;
+            while(a < 22)
+            {
+                if(properties[a].squareNumber == 27)
+                {
+                    properties[a].currentPrice =
+                        properties[a].currentPrice * 100 / 90;
+                }
+
+                if(properties[a].squareNumber == 29)
+                {
+                    properties[a].currentPrice =
+                        properties[a].currentPrice * 100 / 90;
+                }
+
+                a++;
+            }
+        }
+    }
+    gameInfo.currentRegionalDevelopmentCard = -1;
+}
+
+void processDisasterRepairs(void)
+{
+    int i;
+    int owner;
+    int repairCost;
+    int j;
+
+    for(i = 0; i < 22; i++)
+    {
+        if(properties[i].isDisasterDamaged == 0)
+        {
+            continue;
         }
 
-        players[i].money += 5000;
+        owner = properties[i].owner;
 
-        printf("%s receives LKR 5000.\n",
-               players[i].name);
-        break;
+        if(owner < 0 || owner >= 4)
+        {
+            continue;
+        }
 
+        if(players[owner].isBankrupt)
+        {
+            continue;
+        }
 
-    case 20:
-        
-        printf("Event Card : National Disaster\n");
+        repairCost =
+            properties[i].disasterRepairCost;
 
-  
-        break;
+        /*
+         * Automatically repair when the owner
+         * has sufficient funds.
+         */
+        if(players[owner].money >= repairCost)
+        {
+            players[owner].money -= repairCost;
+
+            properties[i].isDisasterDamaged = 0;
+
+            properties[i].disasterRepairCost = 0;
+
+            properties[i].disasterType = -1;
+
+            /*
+             * Restore building condition.
+             */
+            for(j = 0; j < properties[i].houseCount; j++)
+            {
+                properties[i].buildingCondition[j] = 100;
+            }
+
+            if(properties[i].hotelCount > 0)
+            {
+                properties[i].buildingCondition[0] = 100;
+            }
+
+            printf("\nDisaster Repair\n");
+
+            printf("%s repaired %s.\n",
+                   players[owner].name,
+                   properties[i].name);
+
+            printf("Repair Cost : LKR %d\n\n",
+                   repairCost);
+        }
+    }
 }
-}
-*/
+

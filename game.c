@@ -10,12 +10,119 @@
 #include "inflation.h"
 #include "events.h"
 #include "finance.h"
-#include "auctions.h"
+
 #define FULLROUNDS 100
 
 
+void endGame()
+{
+    int i;
+    int winner = -1;
+    int highestNetWorth = -1;
+    int netWorth;
 
-void startingMasage()
+    printf("\n\n");
+    printf("============================================\n");
+    printf("                 GAME OVER\n");
+    printf("============================================\n\n");
+
+    /*
+     * Calculate and display every player's
+     * final financial information.
+     */
+    for(i = 0; i < 4; i++)
+    {
+        netWorth = calculateNetWorth(i);
+
+       // players[i].netWorth = netWorth;
+
+        printf("--------------------------------------------\n");
+        printf("%s\n", players[i].name);
+        printf("--------------------------------------------\n");
+
+        printf("Status          : ");
+
+        if(players[i].isBankrupt)
+        {
+            printf("BANKRUPT\n");
+        }
+        else
+        {
+            printf("SOLVENT\n");
+        }
+
+        printf("Cash            : LKR %d\n",
+               players[i].money);
+
+        printf("Properties      : %d\n",
+               players[i].ownedPropertiesCount);
+
+        printf("Railway Stations: %d\n",
+               players[i].ownedRailwayCount);
+
+        printf("Utilities       : %d\n",
+               players[i].ownedUtilitiesCount);
+
+        printf("Outstanding Loan: LKR %d\n",
+               players[i].currentLoan);
+
+        printf("Net Worth       : LKR %d\n",
+               netWorth);
+
+        /*
+         * Only solvent players can become the winner.
+         */
+        if(players[i].isBankrupt == 0)
+        {
+            if(winner == -1 || netWorth > highestNetWorth)
+            {
+                winner = i;
+                highestNetWorth = netWorth;
+            }
+        }
+
+        printf("\n");
+    }
+
+    /*
+     * Display winner
+     */
+    printf("============================================\n");
+    printf("                 WINNER\n");
+    printf("============================================\n");
+
+    if(winner != -1)
+    {
+        printf("Winner          : %s\n",
+               players[winner].name);
+
+        printf("Final Net Worth : LKR %d\n",
+               highestNetWorth);
+
+        printf("Final Cash      : LKR %d\n",
+               players[winner].money);
+
+        printf("Properties      : %d\n",
+               players[winner].ownedPropertiesCount);
+
+        printf("Railway Stations: %d\n",
+               players[winner].ownedRailwayCount);
+
+        printf("Utilities       : %d\n",
+               players[winner].ownedUtilitiesCount);
+
+        printf("Outstanding Loan: LKR %d\n",
+               players[winner].currentLoan);
+    }
+    else
+    {
+        printf("No solvent player remains.\n");
+    }
+
+    printf("============================================\n\n");
+}
+
+void startingMessage(void)
 {
     printf("MONOPOLY-LK Simulation\n\n");
     printf("Player 1: Aggresive Investor\n");
@@ -23,7 +130,7 @@ void startingMasage()
     printf("Player 3: Risk Taker\n");
     printf("Player 4: Opportunistic Trader\n\n");
     printf("Each player Begins with LKR 30 000\n\n");
-}   
+}
 
 int rollDice()
 {   
@@ -44,6 +151,7 @@ void setPlayOrder()
     /*
      * Roll two dice for every player
      */
+    
     for(i = 0; i < 4; i++)
     {
         playerRolls[i] = rollDice() + rollDice();
@@ -164,6 +272,8 @@ void playGame()
 {
     gameInfo.gameRound = 0;
     gameInfo.bankruptedPlayerCount = 0;
+    initializeEventCards();
+    //initializePropertyDepreciation();
 
     printf("\n*******************************\n");
     printf("Game Round %d Starts\n", gameInfo.gameRound + 1);
@@ -197,7 +307,7 @@ void playGame()
                                 printf("%s goes fourth\n", players[k].name);
                                 break;
                         }
-
+                        maintainBuildings(k);
                         players[k].lastRoll1 = rollDice();
                         players[k].lastRoll2 = rollDice();
 
@@ -227,6 +337,8 @@ void playGame()
                                 players[k].playerRound++;
 
                                 printf("%s passed GO and collects LKR 2000\n",players[k].name);
+
+                                updatePlayerEventCards(k);
                             }
 
                             
@@ -271,15 +383,22 @@ void playGame()
                                         case CommunityFund:
                                             communityDevelopmentFund(k);
                                             break;
+                                        
+                                        case Insurance:
+                                            printf("%s landed on an Insurance Company.\n\n",
+                                                players[k].name);
+
+                                            manageInsurance(k);
+
+                                            break;
+                                        
 
                                         case Event:
                                             printf("%s landed on an Event square.\n\n",
                                                 players[k].name);
-                                            break;
 
-                                        case Insurance:
-                                            printf("%s landed on an Insurance square.\n\n",
-                                                players[k].name);
+                                            pickEventCard(k);
+
                                             break;
 
                                         case Bank:
@@ -345,6 +464,17 @@ void playGame()
         if(completed)
         {
             gameInfo.gameRound++;
+
+            updatePropertyDepreciation();
+            updateBuildingCondition();
+            updateMaintenanceDamage();
+
+            if(gameInfo.gameRound != 0 && gameInfo.gameRound % 15 == 0)
+            {
+                resetCurrentRegionalDevelopmentCards();
+                regionalDevelopmentCards();
+            }
+
             for(int i = 0; i < 4; i++)
             {
                 if(players[i].isBankrupt == 0)
@@ -361,6 +491,20 @@ void playGame()
             inflation(gameInfo.gameRound);
             economicEvents(gameInfo.gameRound);
             governmentRegulations(gameInfo.gameRound);
+            handleEventCard();
+
+            /* Disaster happens before insurance expiry */
+            if(gameInfo.gameRound % 10 == 0)
+            {
+                nationalDisaster();
+            }
+
+            /* Automatically repair damaged properties */
+            processDisasterRepairs();
+
+            /* Check insurance warnings and expiry */
+            updateInsurancePolicies();
+            
             printf("\n\n");
 
             printf("=========================================\n");
@@ -377,13 +521,14 @@ void playGame()
     }
 
     printf("\n========== GAME OVER ==========\n");
+    endGame();
 }
 
 
-void startGame(){
-    startingMasage();
+void startGame(void)
+{
+    startingMessage();
     setPlayOrder();
     playGame();
-
-
 }
+

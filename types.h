@@ -38,6 +38,21 @@ enum players
     opportunisticTrader,
 };
 
+enum insurancePolicyType{
+    basicPropertyInsurance,
+    comprehensiveInsurance,
+    BusinessInterruptionInsurance,
+};
+
+enum disasterType {
+    fire,
+    flood,
+    riot,
+    buildingCollapse,
+    electricalFailure,
+    vandalism,
+    earthquake
+};
 
 
 struct property
@@ -63,10 +78,22 @@ struct property
     int propertyAge;
     int depreciationPercent;
     int auctionStartingPrice;
-
+    int isClosed;
+    int closedRounds;
+    int isUnderTourismHype;
+    int buildingCondition[4];
+    int maintenanceIgnoredRounds;
+    int isStructurallyDamaged;    
+    int isDisasterDamaged;
+    int disasterType;
+    int disasterRepairCost;
+    int insurancePolicyType;
+    int insuranceExpiryRound;
 
 };
+
 extern struct property properties[22];
+
 
 struct propertyColor{
     enum propertyColorGroup color;
@@ -76,6 +103,8 @@ struct propertyColor{
 };
 
 extern struct propertyColor propertyColors[8];
+
+
 struct square
 {
     char name[50];
@@ -84,6 +113,8 @@ struct square
     int propertyColor;
 };
 extern struct square board[40];
+
+
 
 struct player
 {
@@ -115,6 +146,8 @@ struct player
 };
 extern struct player players[4];
 
+
+
 struct railway {
     char name[50];
     int squareNumber;
@@ -132,6 +165,8 @@ struct railway {
 };
 extern struct railway railways[4];
 
+
+
 struct utility {
     char name[50];
     int squareNumber;
@@ -148,27 +183,16 @@ struct utility {
 };
 extern struct utility utilities[2];
 
+
+
 struct insuranceCompany{
     char name[50];
     int squareNumber;    // ASSUMPTION: not specified in assignment — confirm with lectur
 };
 extern struct insuranceCompany insuranceCompanies[2];
 
-enum insurancePolicyType{
-    basicPropertyInsurance,
-    comprehensiveInsurance,
-    BusinessInterruptionInsurance,
-};
 
-enum disasterType {
-    fire,
-    flood,
-    riot,
-    buildingCollapse,
-    electricalFailure,
-    vandalism,
-    earthquake
-};
+
 
 struct Insurance {
     enum insurancePolicyType insurance_policy;
@@ -187,6 +211,7 @@ struct Bidding{
 
 extern struct Bidding bidding;
 
+
 struct gameData {
     int gameRound;
     int bankruptedPlayerCount;
@@ -198,17 +223,18 @@ struct gameData {
     int currentMarketBoomColor;
     int previousMarketDeclineColor;
     int currentMarketDeclineColor;
-
-
+    int currentRegionalDevelopmentCard;
 };
 
 extern struct gameData gameInfo;
+
 
 struct rate {
     int interestRate;
     int incomeTaxRate;
 };
 extern struct rate rates;
+
 
 struct monopoly{
     int monopolyColor;
@@ -218,9 +244,16 @@ struct monopoly{
 };
 
 extern struct monopoly monopolies[8];
-/* Function prototypes for finance-related operations */
 
-struct eventCardRound{
-    int tourismHype;
+
+struct eventCardData
+{
+    int isActive[20];
+    int startRound[20];
 };
+
+extern struct eventCardData eventCardData[4];
+
+
+
 #endif 

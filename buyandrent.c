@@ -6,17 +6,27 @@
 #include "players.h"
 #include "board.h"
 #include "finance.h"
-#include "auctions.h"
-
 
 void propertyBuyRent(int playerSquare, int k)
 {
     int l = 0;
-
+     int averageCondition;
+    int rentPercentage;
+    int actualRent;
     while(l < 22)
     {
         if(playerSquare == properties[l].squareNumber)
         {
+            if(properties[l].isClosed == 1)
+            {
+                printf("%s is currently closed due to Political Rally.\n",
+                       properties[l].name);
+
+                printf("No property operation can be performed.\n\n");
+
+                break;
+            }
+
             if(properties[l].hasOwner == 0)
             {
                 if(playerPurchaseDecision(k, l))
@@ -34,7 +44,6 @@ void propertyBuyRent(int playerSquare, int k)
                 }
                 else
                 {
-
                     printf("%s declined to purchase %s.\n",players[k].name,properties[l].name);
                     printf("Property enters auction.\n\n");
                     auctionProperty(l);
@@ -48,14 +57,56 @@ void propertyBuyRent(int playerSquare, int k)
 
                     printf("%s landed on %s.\n",players[k].name,properties[l].name);
 
-                    printf("Rent paid : LKR %d.\n",properties[l].currentRent);
+                    int averageCondition;
+                    int rentPercentage;
+                    int actualRent;
 
-                    printf("Owner : %s.\n\n",players[properties[l].owner].name);
+                    averageCondition =
+                        calculateAverageBuildingCondition(l);
 
-                    players[k].money -= properties[l].currentRent;
-                    players[k].taxableMoney -= properties[l].currentRent;
+                    rentPercentage =
+                        getConditionRentPercentage(averageCondition);
 
-                    players[properties[l].owner].money += properties[l].currentRent;
+                    actualRent =
+                        properties[l].currentRent *
+                        rentPercentage / 100;
+
+                    if(properties[l].isStructurallyDamaged)
+                    {
+                        actualRent =
+                            actualRent * 75 / 100;
+                    }
+
+                    if(properties[l].isDisasterDamaged)
+                    {
+                        actualRent = 0;
+
+                        printf("Disaster Damage : No rent can be collected.\n");
+                    }
+
+                    printf("Average Building Condition : %d%%\n",
+                        averageCondition);
+
+                    printf("Rent Collection : %d%%\n",
+                        rentPercentage);
+
+                    if(properties[l].isStructurallyDamaged)
+                    {
+                        printf("Structural Damage : Rent reduced by 25%%\n");
+                    }
+
+                    printf("Rent paid : LKR %d.\n",
+                        actualRent);
+
+                    printf("Owner : %s.\n\n",
+                        players[properties[l].owner].name);
+
+                    players[k].money -= actualRent;
+                    players[k].taxableMoney -= actualRent;
+
+                    players[properties[l].owner].money += actualRent;
+
+                    
                 }
                 else
                 {
