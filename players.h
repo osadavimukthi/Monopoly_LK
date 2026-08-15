@@ -32,4 +32,6 @@ int riskTakerAuctionDecision(int playerID, int propertyIndex, int currentBid);
 int opportunisticAuctionDecision(int playerID, int propertyIndex, int currentBid);
 
 void auctionProperty(int propertyIndex);
+
+int countUndevelopedProperties(int playerID);
 #endif

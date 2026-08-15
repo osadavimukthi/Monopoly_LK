@@ -7,321 +7,282 @@
 
 void setNewEconomicEventt()
 {
-    printf("A new Economic Event has started \n\n");
-        int events[8] = {1,2,3,4,5,6,7,8};
-        int a=0;
-        srand(time(NULL));
-        int randomEvent = rand() % 8;
-        gameInfo.previousEconomicEvent = gameInfo.currentEconomicEvent;
-        gameInfo.currentEconomicEvent = randomEvent;
-        switch(randomEvent){
-            case 1:
-                a=0;
-                printf("Economic Event : Tourism Boom\n");
-                while(a<22){
-                    printf("Hotels recieve double Rent\n");
-                    if(properties[a].hotelCount==1){
-                        properties[a].currentRent = properties[a].currentRent * 2;
-                    }
-                    printf("Southern costal property price increased by 15%\n");
-                    if(properties[a].colorGroup==5)
-                    {
-                        properties[a].currentPrice = properties[a].currentPrice * 1.15;
-                    }
-                    a++;
-                }
-                break;
+    printf("A new Economic Event has started\n\n");
 
-            case 2:
-                printf("Economic Event : Fuel Crisis\n");
-                printf("Railways recieve double Rent\n");
-                a=0;
-                while(a<4){
-                    railways[a].currentRent = railways[a].currentRent * 2;
-                    a++;
-                }
-                a = 0;
-                printf("Property development costs increased by 20%\n");
-                while(a<22){
-                    properties[a].houseConstructionCost = properties[a].houseConstructionCost * 1.2;
-                    properties[a].hotelConstructionCost = properties[a].hotelConstructionCost * 1.2;
-                    a++;
-                }
-                break;
+    int a = 0;
+    int randomEvent = rand() % 8 + 1;
 
-            case 3:
-                printf("Economic Event : Heavy Mansoon\n");
-                //implement inccreasement of flood risk
-                //wrong percentage
-                printf("Insuarence premiums increased by 30%\n");
-                a=0;
-                while(a<3)
-                {
-                    insurance[a].insurancePremium = insurance[a].insurancePremium * 13 / 10;
-                    a++;
-                }
-                printf("Southern costal property price decreased by 10%\n");
-                    if(properties[a].colorGroup==5)
-                    {
-                        properties[a].currentPrice = properties[a].currentPrice * 9 / 10;
-                    }
+    gameInfo.previousEconomicEvent =
+        gameInfo.currentEconomicEvent;
 
-                break;
+    gameInfo.currentEconomicEvent =
+        randomEvent;
 
-            case 4:
-                printf("Econoomic Event : Economic Recession\n");
-                printf("All property prices decreased by 15%\n");
-                a=0;
-                while(a<22){
-                    properties[a].currentPrice = properties[a].currentPrice * 0.85;
-                    a++;
-                }
-                printf("Rent decreased by 10%\n");
-                a=0;
-                while(a<22){
-                    properties[a].currentRent = properties[a].currentRent * 0.9;
-                    a++;
-                }
-                a=0;
-                while(a<4){
-                    railways[a].currentRent = railways[a].currentRent * 0.9;
-                    a++;
-                }
-                a=0;
-                while(a<2){
-                    utilities[a].currentRent = utilities[a].currentRent * 0.9;
-                    a++;
-                }
-                a=0;
-                printf("Loan interest rates increased by 15%\n");
-                while(a<4){
-                    rates.interestRate = rates.interestRate * 115 / 100;
-                    a++;
-                }
-                break;
-
-            case 5:
-                printf("Economic Event : Stock Market Boom\n");
-                printf("All property prices increased by 10%\n");
-                a=0;
-                while(a<22){
-                    properties[a].currentPrice = properties[a].currentPrice * 1.1;
-                    a++;
-                }
-                printf("loan interest rates decreased by 10%\n");
-                a=0;
-                while(a<4){
-                    rates.interestRate = rates.interestRate * 90 / 100;
-                    a++;
-                }
-                break;
-            
-            case 6:
-                printf("Economic Event : Government Housing Programme\n");
-                printf("House construction cost decreased by 25%\n");
-                a=0;
-                while(a<22){
-                    properties[a].houseConstructionCost = properties[a].houseConstructionCost * 0.75;
-                    a++;
-                }
-                break;
-            case 7:
-                printf("Economic Event : Foreign Investment\n");
-                printf("Commercial property prices increased by 20%\n");
-                a=0;
-                //not implemented
-                break;
-
-            case 8:
-                printf("Economic Event : Political Unrest\n");
-                printf("Riot Probability doubled\n");
-                //not implemented
-                printf("Hotel occupancy and hotel rent decreased by 50%\n");
-                //not mentioned about hotel occupancy in assignment
-                a=0;
-                while(a<22){
-                    if(properties[a].hotelCount==1){
-                        properties[a].currentRent = properties[a].currentRent * 0.5;
-                    }
-                printf("Business Interuption Claims increased.\n");
-                //not implemented
-                a++;
-
-                }
-    }
-}
-
-void resetCurrentEconomicEvent()
-{
-    int a=0;
-    printf("Economic Event has ended\n");
-    switch(gameInfo.currentEconomicEvent){
-        case 1:
-            while(a<22){
-                if(properties[a].hotelCount==1){
-                    properties[a].currentRent = properties[a].currentRent / 2;
-                }
-                if(properties[a].colorGroup==5)
-                {
-                    properties[a].currentPrice = properties[a].currentPrice / 1.15;
-                }
-                a++;
-            }
-            break;
-        case 2:
-            while(a<4){
-                railways[a].currentRent = railways[a].currentRent / 2;
-                a++;
-            }
-            a=0;
-            while(a<22){
-                properties[a].houseConstructionCost = properties[a].houseConstructionCost / 1.2;
-                properties[a].hotelConstructionCost = properties[a].hotelConstructionCost / 1.2;
-                a++;
-            }
-            break;
-        case 3:
-            while(a<3)
-            {
-                insurance[a].insurancePremium = insurance[a].insurancePremium * 10 / 13;
-                a++;
-            }
-            a=0;
-            while(a<22){
-                if(properties[a].colorGroup==5)
-                {
-                    properties[a].currentPrice = properties[a].currentPrice * 10 / 9;
-                }
-                a++;
-            }
-            break;
-        case 4:
-            while(a<22){
-                properties[a].currentPrice = properties[a].currentPrice / 0.85;
-                a++;
-            }
-            a=0;
-            while(a<22){
-                properties[a].currentRent = properties[a].currentRent / 0.9;
-                a++;
-            }
-            a=0;
-            while(a<4){
-                railways[a].currentRent = railways[a].currentRent / 0.9;
-                a++;
-            }
-}   
-}
-
-void economicEvents(int roundNumber)
-{
-    if(gameInfo.gameRound !=0 && roundNumber % 15 == 0)
+    switch(randomEvent)
     {
-        resetCurrentEconomicEvent();
-        setNewEconomicEventt();
-    }
+        case 1:
 
-}
+            printf("Economic Event : Tourism Boom\n");
+            printf("Hotels receive double Rent\n");
+            printf("Southern coastal property price increased by 15%%\n");
 
-void setNewGovernmentRegulations(){
-    printf("Goverment Regulation Change has been implemented\n");
-        int regulations[8] = {1,2,3,4,5,6,7,8};
-        int a=0;
-        int i;
-        srand(time(NULL));
-        int randomRegulation = rand() % 8;
-        gameInfo.previousGovernmentRegulation = gameInfo.currentGovernmentRegulation;
-        gameInfo.currentGovernmentRegulation = randomRegulation;
-        switch(randomRegulation)
-{
-    case 1:
-        printf("Government Regulation : Increase Property Tax\n");
+            a = 0;
 
-        rates.incomeTaxRate =
-            rates.incomeTaxRate * 150 / 100;
-
-        break;
-
-
-    case 2:
-        printf("Government Regulation : Reduce Loan Interest\n");
-
-        rates.interestRate =
-            rates.interestRate - 2;
-
-        break;
-
-
-    case 3:
-        printf("Government Regulation : Housing Subsidy\n");
-
-        for(a = 0; a < 22; a++)
-        {
-            properties[a].houseConstructionCost =
-                properties[a].houseConstructionCost * 70 / 100;
-        }
-
-        break;
-
-
-    case 4:
-        printf("Government Regulation : Luxury Property Tax\n");
-
-        for(a = 0; a < 22; a++)
-        {
-            if(properties[a].hotelCount > 0)
+            while(a < 22)
             {
-                /* Annual maintenance tax will be handled here */
+                if(properties[a].hotelCount > 0)
+                {
+                    properties[a].currentRent =
+                        properties[a].currentRent * 2;
+                }
+
+                if(properties[a].colorGroup == Yellow)
+                {
+                    properties[a].currentPrice =
+                        properties[a].currentPrice * 115 / 100;
+                }
+
+                a++;
             }
-        }
 
-        break;
-
-
-    case 5:
-        printf("Government Regulation : Railway Modernization\n");
-
-        for(a = 0; a < 4; a++)
-        {
-            railways[a].currentRent =
-                railways[a].currentRent * 125 / 100;
-        }
-
-        break;
+            break;
 
 
-    case 6:
-        printf("Government Regulation : Electricity Tariff Revision\n");
+        case 2:
 
-        for(a = 0; a < 2; a++)
-        {
-            utilities[a].currentRent =
-                utilities[a].currentRent * 120 / 100;
-        }
+            printf("Economic Event : Fuel Crisis\n");
+            printf("Railways receive double Rent\n");
+            printf("Property development costs increased by 20%%\n");
 
-        break;
+            a = 0;
+
+            while(a < 4)
+            {
+                railways[a].currentRent =
+                    railways[a].currentRent * 2;
+
+                a++;
+            }
+
+            a = 0;
+
+            while(a < 22)
+            {
+                properties[a].houseConstructionCost =
+                    properties[a].houseConstructionCost * 120 / 100;
+
+                properties[a].hotelConstructionCost =
+                    properties[a].hotelConstructionCost * 120 / 100;
+
+                a++;
+            }
+
+            break;
 
 
-    case 7:
-        printf("Government Regulation : Insurance Regulation\n");
+        case 3:
 
-        for(a = 0; a < 3; a++)
-        {
-            insurance[a].insurancePremium =
-                insurance[a].insurancePremium * 85 / 100;
-        }
+            printf("Economic Event : Heavy Monsoon\n");
+            printf("Flood risk increased\n");
+            printf("Insurance premiums increased\n");
+            printf("Southern coastal property price decreased by 10%%\n");
 
-        break;
+            /*
+             * The assignment does not specify the percentage
+             * increase for insurance premiums.
+             *
+             * Your existing code assumed 30%, so keeping
+             * your existing assumption here.
+             */
+
+            a = 0;
+
+            while(a < 3)
+            {
+                insurance[a].insurancePremium =
+                    insurance[a].insurancePremium * 130 / 100;
+
+                a++;
+            }
+
+            /*
+             * Southern coastal properties:
+             * Galle Fort
+             * Unawatuna
+             * Hikkaduwa
+             *
+             * These are Yellow group properties in your
+             * existing board.
+             */
+
+            a = 0;
+
+            while(a < 22)
+            {
+                if(properties[a].colorGroup == Yellow)
+                {
+                    properties[a].currentPrice =
+                        properties[a].currentPrice * 90 / 100;
+                }
+
+                a++;
+            }
+
+            /*
+             * NOTE:
+             * Your current data structures do not contain
+             * a floodProbability / floodRisk variable.
+             *
+             * Therefore the flood-risk increase cannot be
+             * numerically implemented without adding a new
+             * variable to your existing structure.
+             */
+
+            break;
 
 
-    case 8:
-        printf("Government Regulation : Anti-Speculation Act\n");
+        case 4:
 
-        /* Rule will be checked when a player attempts
-           to purchase an undeveloped property. */
+            printf("Economic Event : Economic Recession\n");
+            printf("All property prices decreased by 15%%\n");
+            printf("Rent decreased by 10%%\n");
+            printf("Loan interest rates increased by 15%%\n");
 
-        break;
-}
+            a = 0;
+
+            while(a < 22)
+            {
+                properties[a].currentPrice =
+                    properties[a].currentPrice * 85 / 100;
+
+                properties[a].currentRent =
+                    properties[a].currentRent * 90 / 100;
+
+                a++;
+            }
+
+            a = 0;
+
+            while(a < 4)
+            {
+                railways[a].currentRent =
+                    railways[a].currentRent * 90 / 100;
+
+                a++;
+            }
+
+            a = 0;
+
+            while(a < 2)
+            {
+                utilities[a].currentRent =
+                    utilities[a].currentRent * 90 / 100;
+
+                a++;
+            }
+
+            rates.interestRate =
+                rates.interestRate * 115 / 100;
+
+            break;
+
+
+        case 5:
+
+            printf("Economic Event : Stock Market Boom\n");
+            printf("All property prices increased by 10%%\n");
+            printf("Loan interest rates decreased by 10%%\n");
+
+            a = 0;
+
+            while(a < 22)
+            {
+                properties[a].currentPrice =
+                    properties[a].currentPrice * 110 / 100;
+
+                a++;
+            }
+
+            rates.interestRate =
+                rates.interestRate * 90 / 100;
+
+            break;
+
+
+        case 6:
+
+            printf("Economic Event : Government Housing Programme\n");
+            printf("House construction cost decreased by 25%%\n");
+
+            a = 0;
+
+            while(a < 22)
+            {
+                properties[a].houseConstructionCost =
+                    properties[a].houseConstructionCost * 75 / 100;
+
+                a++;
+            }
+
+            break;
+
+
+        case 7:
+
+            printf("Economic Event : Foreign Investment\n");
+            printf("Commercial property prices increased by 20%%\n");
+
+            /*
+             * In your current board, all 22 purchasable
+             * properties are the commercial property type.
+             */
+
+            a = 0;
+
+            while(a < 22)
+            {
+                properties[a].currentPrice =
+                    properties[a].currentPrice * 120 / 100;
+
+                a++;
+            }
+
+            break;
+
+
+        case 8:
+
+            printf("Economic Event : Political Unrest\n");
+            printf("Riot probability doubled\n");
+            printf("Hotel occupancy and hotel rent decreased by 50%%\n");
+            printf("Business interruption claims increased\n");
+
+            a = 0;
+
+            while(a < 22)
+            {
+                if(properties[a].hotelCount > 0)
+                {
+                    properties[a].currentRent =
+                        properties[a].currentRent * 50 / 100;
+                }
+
+                a++;
+            }
+
+            /*
+             * Your current structures do not contain:
+             *
+             *     riotProbability
+             *     hotelOccupancy
+             *     businessInterruptionClaim
+             *
+             * Therefore those three effects cannot be stored
+             * numerically without adding corresponding fields.
+             */
+
+            break;
+    }
 }
 
 void resetCurrentGovernmentRegulations()
@@ -333,16 +294,23 @@ void resetCurrentGovernmentRegulations()
     switch(gameInfo.currentGovernmentRegulation)
     {
         case 1:
+
             rates.incomeTaxRate =
                 rates.incomeTaxRate * 100 / 150;
 
             break;
+
+
         case 2:
+
             rates.interestRate =
                 rates.interestRate + 2;
 
             break;
+
+
         case 3:
+
             for(a = 0; a < 22; a++)
             {
                 properties[a].houseConstructionCost =
@@ -350,38 +318,271 @@ void resetCurrentGovernmentRegulations()
             }
 
             break;
+
+
         case 4:
-            /* Annual maintenance tax will be handled here */
 
             break;
+
+
         case 5:
-            for(a = 0; a < 4; a++)  
+
+            for(a = 0; a < 4; a++)
             {
                 railways[a].currentRent =
                     railways[a].currentRent * 100 / 125;
             }
-            break;
-        case 6:
-            for(a = 0; a < 2; a++)
-            {
-                utilities[a].currentRent =
-                    utilities[a].currentRent * 100 / 120;
-            }
-            break;
-        case 7:
-            for(a = 0; a < 3; a++)
-            {
-                insurance[a].insurancePremium =
-                    insurance[a].insurancePremium * 100 / 85;
-            }
-            break;
-        case 8:
-            /* Rule will be checked when a player attempts
-               to purchase an undeveloped property. */
 
-            break;   
+            break;
+
+
+        case 6:
+
+            break;
+
+
+        case 7:
+
+            break;
+
+
+        case 8:
+
+            break;
     }
 }
+/*
+void resetCurrentGovernmentRegulations()
+{
+    int a = 0;
+
+    printf("Government Regulation Change has ended.\n");
+
+    switch(gameInfo.currentGovernmentRegulation)
+    {
+        case 1:
+
+            rates.incomeTaxRate =
+                rates.incomeTaxRate * 100 / 150;
+
+            break;
+
+
+        case 2:
+
+            rates.interestRate =
+                rates.interestRate + 2;
+
+            break;
+
+
+        case 3:
+
+            for(a = 0; a < 22; a++)
+            {
+                properties[a].houseConstructionCost =
+                    properties[a].houseConstructionCost * 100 / 70;
+
+                properties[a].hotelConstructionCost =
+                    properties[a].hotelConstructionCost * 100 / 70;
+            }
+
+            break;
+
+
+        case 4:
+
+          
+            break;
+
+
+        case 5:
+
+            for(a = 0; a < 4; a++)
+            {
+                railways[a].currentRent =
+                    railways[a].currentRent * 100 / 125;
+            }
+
+            break;
+
+
+        case 6:
+
+            break;
+
+
+        case 7:
+
+
+            break;
+
+
+        case 8:
+
+         /
+
+            break;
+    }
+}
+*/
+
+void economicEvents(int roundNumber)
+{
+    if(gameInfo.gameRound !=0 && roundNumber % 15 == 0)
+    {
+        resetCurrentEconomicEvent();
+        setNewEconomicEventt();
+    }
+
+}
+
+void setNewGovernmentRegulations()
+{
+    printf("Goverment Regulation Change has been implemented\n");
+
+    int randomRegulation = rand() % 8 + 1;
+
+    gameInfo.previousGovernmentRegulation =
+        gameInfo.currentGovernmentRegulation;
+
+    gameInfo.currentGovernmentRegulation =
+        randomRegulation;
+
+    switch(randomRegulation)
+    {
+        case 1:
+
+            printf("Government Regulation : Increase Property Tax\n");
+
+            rates.incomeTaxRate =
+                rates.incomeTaxRate * 150 / 100;
+
+            printf("Income Tax Rate increased by 50%%.\n");
+            printf("New Income Tax Rate : %d%%\n\n",
+                   rates.incomeTaxRate);
+
+            break;
+
+
+        case 2:
+
+            printf("Government Regulation : Reduce Loan Interest\n");
+
+            rates.interestRate =
+                rates.interestRate - 2;
+
+            if(rates.interestRate < 0)
+            {
+                rates.interestRate = 0;
+            }
+
+            printf("Loan interest rate reduced by 2%%.\n");
+            printf("New Loan Interest Rate : %d%%\n\n",
+                   rates.interestRate);
+
+            break;
+
+
+        case 3:
+
+            printf("Government Regulation : Housing Subsidy\n");
+
+            for(int a = 0; a < 22; a++)
+            {
+                properties[a].houseConstructionCost =
+                    properties[a].houseConstructionCost * 70 / 100;
+
+                properties[a].hotelConstructionCost =
+                    properties[a].hotelConstructionCost * 70 / 100;
+            }
+
+            printf("House and hotel construction costs reduced by 30%%.\n\n");
+
+            break;
+
+
+        case 4:
+
+            printf("Government Regulation : Luxury Property Tax\n");
+            printf("Hotels are subject to a 25%% annual maintenance tax.\n\n");
+
+            break;
+
+
+        case 5:
+
+            printf("Government Regulation : Railway Modernization\n");
+            printf("Railway rent increased by 25%%.\n\n");
+
+            break;
+
+
+        case 6:
+
+            printf("Government Regulation : Electricity Tariff Revision\n");
+            printf("Utility rent increased by 20%%.\n\n");
+
+            break;
+
+
+        case 7:
+
+            printf("Government Regulation : Insurance Regulation\n");
+            printf("Insurance premiums reduced by 15%%.\n\n");
+
+            break;
+
+
+        case 8:
+
+            printf("Government Regulation : Anti-Speculation Act\n");
+            printf("Maximum of 3 undeveloped properties allowed.\n");
+            printf("Additional properties must be developed within 5 rounds.\n\n");
+
+            break;
+    }
+}
+
+void payLuxuryPropertyTax()
+{
+    int k = 0;
+
+    while(k < 4)
+    {
+        if(players[k].isBankrupt == 0)
+        {
+            int luxuaryPropertyTax = 0;
+            int a = 0;
+
+            while(a < 22)
+            {
+                if(properties[a].owner == players[k].playerID &&
+                   properties[a].hotelCount > 0)
+                {
+                    luxuaryPropertyTax +=
+                        properties[a].currentPrice * 25 / 100;
+                }
+
+                a++;
+            }
+
+            if(luxuaryPropertyTax > 0)
+            {
+                printf("%s has to pay LKR %d as Luxury Property Tax\n",
+                       players[k].name,
+                       luxuaryPropertyTax);
+
+                players[k].money -= luxuaryPropertyTax;
+                //players[k].taxableMoney -= luxuaryPropertyTax;
+            }
+        }
+
+        k++;
+    }
+}
+
+
 
 void governmentRegulations(int roundNumber)
 {   
@@ -623,7 +824,7 @@ void dynamicPropertyMarkrt(int roundNumber)
 
             if(
                 (propertyColors[propertyGroupList[randomColor]]
-                    .marketBoomRound == 0
+                    .marketBoomRound <= 0
                 ||
                 roundNumber -
                 propertyColors[propertyGroupList[randomColor]]
@@ -632,7 +833,7 @@ void dynamicPropertyMarkrt(int roundNumber)
                 &&
 
                 (propertyColors[propertyGroupList[randomColor]]
-                    .marketDeclineRound == 0
+                    .marketDeclineRound <= 0
                 ||
                 roundNumber -
                 propertyColors[propertyGroupList[randomColor]]
@@ -665,7 +866,7 @@ void dynamicPropertyMarkrt(int roundNumber)
 
                 (
                     propertyColors[propertyGroupList[randomColor]]
-                        .marketBoomRound == 0
+                        .marketBoomRound <= 0
                     ||
                     roundNumber -
                     propertyColors[propertyGroupList[randomColor]]
@@ -675,7 +876,7 @@ void dynamicPropertyMarkrt(int roundNumber)
 
                 (
                     propertyColors[propertyGroupList[randomColor]]
-                        .marketDeclineRound == 0
+                        .marketDeclineRound <= 0
                     ||
                     roundNumber -
                     propertyColors[propertyGroupList[randomColor]]
@@ -747,6 +948,7 @@ void dynamicPropertyMarkrt(int roundNumber)
         marketDecline(marketDeclinePropertyColor);
     }
 }
+
 void updateMarketRounds(int gameRound)
 {
     int i;
@@ -1151,6 +1353,7 @@ void governmentGrant()
     }
 
     players[playerID].money += 5000;
+players[playerID].taxableMoney += 5000;
 
     printf("%s receives LKR 5000.\n\n",
            players[playerID].name);
@@ -2105,3 +2308,244 @@ void processDisasterRepairs(void)
     }
 }
 
+void resetCurrentEconomicEvent()
+{
+    int a = 0;
+
+    if(gameInfo.currentEconomicEvent == -1 ||
+       gameInfo.currentEconomicEvent == 0)
+    {
+        return;
+    }
+
+    printf("Economic Event has ended.\n");
+
+    switch(gameInfo.currentEconomicEvent)
+    {
+        case 1:
+
+            /*
+             * Tourism Boom
+             *
+             * Hotels received double rent.
+             * Southern coastal properties increased by 15%.
+             */
+
+            a = 0;
+
+            while(a < 22)
+            {
+                if(properties[a].hotelCount > 0)
+                {
+                    properties[a].currentRent =
+                        properties[a].currentRent / 2;
+                }
+
+                if(properties[a].colorGroup == Yellow)
+                {
+                    properties[a].currentPrice =
+                        properties[a].currentPrice * 100 / 115;
+                }
+
+                a++;
+            }
+
+            break;
+
+
+        case 2:
+
+            /*
+             * Fuel Crisis
+             */
+
+            a = 0;
+
+            while(a < 4)
+            {
+                railways[a].currentRent =
+                    railways[a].currentRent / 2;
+
+                a++;
+            }
+
+            a = 0;
+
+            while(a < 22)
+            {
+                properties[a].houseConstructionCost =
+                    properties[a].houseConstructionCost * 100 / 120;
+
+                properties[a].hotelConstructionCost =
+                    properties[a].hotelConstructionCost * 100 / 120;
+
+                a++;
+            }
+
+            break;
+
+
+        case 3:
+
+            /*
+             * Heavy Monsoon
+             *
+             * Your current implementation assumes
+             * insurance premiums increased by 30%.
+             */
+
+            a = 0;
+
+            while(a < 3)
+            {
+                insurance[a].insurancePremium =
+                    insurance[a].insurancePremium * 100 / 130;
+
+                a++;
+            }
+
+            a = 0;
+
+            while(a < 22)
+            {
+                if(properties[a].colorGroup == Yellow)
+                {
+                    properties[a].currentPrice =
+                        properties[a].currentPrice * 100 / 90;
+                }
+
+                a++;
+            }
+
+            break;
+
+
+        case 4:
+
+            /*
+             * Economic Recession
+             */
+
+            a = 0;
+
+            while(a < 22)
+            {
+                properties[a].currentPrice =
+                    properties[a].currentPrice * 100 / 85;
+
+                properties[a].currentRent =
+                    properties[a].currentRent * 100 / 90;
+
+                a++;
+            }
+
+            a = 0;
+
+            while(a < 4)
+            {
+                railways[a].currentRent =
+                    railways[a].currentRent * 100 / 90;
+
+                a++;
+            }
+
+            a = 0;
+
+            while(a < 2)
+            {
+                utilities[a].currentRent =
+                    utilities[a].currentRent * 100 / 90;
+
+                a++;
+            }
+
+            rates.interestRate =
+                rates.interestRate * 100 / 115;
+
+            break;
+
+
+        case 5:
+
+            /*
+             * Stock Market Boom
+             */
+
+            a = 0;
+
+            while(a < 22)
+            {
+                properties[a].currentPrice =
+                    properties[a].currentPrice * 100 / 110;
+
+                a++;
+            }
+
+            rates.interestRate =
+                rates.interestRate * 100 / 90;
+
+            break;
+
+
+        case 6:
+
+            /*
+             * Government Housing Programme
+             */
+
+            a = 0;
+
+            while(a < 22)
+            {
+                properties[a].houseConstructionCost =
+                    properties[a].houseConstructionCost * 100 / 75;
+
+                a++;
+            }
+
+            break;
+
+
+        case 7:
+
+            /*
+             * Foreign Investment
+             */
+
+            a = 0;
+
+            while(a < 22)
+            {
+                properties[a].currentPrice =
+                    properties[a].currentPrice * 100 / 120;
+
+                a++;
+            }
+
+            break;
+
+
+        case 8:
+
+            /*
+             * Political Unrest
+             */
+
+            a = 0;
+
+            while(a < 22)
+            {
+                if(properties[a].hotelCount > 0)
+                {
+                    properties[a].currentRent =
+                        properties[a].currentRent * 100 / 50;
+                }
+
+                a++;
+            }
+
+            break;
+    }
+
+    gameInfo.currentEconomicEvent = 0;
+}

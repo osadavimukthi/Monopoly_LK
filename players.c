@@ -1223,7 +1223,7 @@ void auctionProperty(int propertyIndex)
 
     players[highestBidder].money -= currentBid;
 
-    players[highestBidder].taxableMoney -= currentBid;
+    //players[highestBidder].taxableMoney -= currentBid;
 
 
     /*
@@ -1381,3 +1381,40 @@ void manageInsurance(int playerID)
         }
     }
 }
+
+int countUndevelopedProperties(int playerID)
+{
+    int i = 0;
+    int count = 0;
+
+    while(i < players[playerID].ownedPropertiesCount)
+    {
+        int squareNumber = players[playerID].ownedProperties[i];
+        int j = 0;
+
+        while(j < 22)
+        {
+            if(properties[j].squareNumber == squareNumber)
+            {
+                if(properties[j].houseCount == 0 &&
+                   properties[j].hotelCount == 0)
+                {
+                    count++;
+                }
+
+                break;
+            }
+
+            j++;
+        }
+
+        i++;
+    }
+
+    return count;
+}
+
+
+
+
+

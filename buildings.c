@@ -14,7 +14,6 @@ int checkMonopoly(int playerID, int colorGroup)
     int monopolyIndex = -1;
     int ownedCount = 0;
 
-    /* Find the monopoly for this colour group */
     for(i = 0; i < 8; i++)
     {
         if(monopolies[i].monopolyColor == colorGroup)
@@ -29,7 +28,6 @@ int checkMonopoly(int playerID, int colorGroup)
         return 0;
     }
 
-    /* Count properties owned by this player in this group */
     for(i = 0; i < 22; i++)
     {
         if(properties[i].colorGroup == colorGroup &&
@@ -39,13 +37,9 @@ int checkMonopoly(int playerID, int colorGroup)
         }
     }
 
-    /* Check if the player has completed the monopoly */
     if(ownedCount == monopolies[monopolyIndex].monopolyCount)
     {
-        /*
-         * Only display the message when the monopoly
-         * is obtained for the first time.
-         */
+        
         if(monopolies[monopolyIndex].hasOwner == 0)
         {
             monopolies[monopolyIndex].hasOwner = 1;
@@ -53,9 +47,7 @@ int checkMonopoly(int playerID, int colorGroup)
 
             printf("\n============================================\n");
             printf("MONOPOLY OBTAINED!\n");
-            printf("%s has obtained the monopoly of Group %d.\n",
-                   players[playerID].name,
-                   colorGroup);
+            printf("%s has obtained the monopoly of Group %d.\n", players[playerID].name, colorGroup);
             printf("============================================\n\n");
         }
         else
@@ -72,6 +64,7 @@ int checkMonopoly(int playerID, int colorGroup)
 
     return 0;
 }
+
 int constructHouse(int k, int propertyIndex)
 {
     if(properties[propertyIndex].isClosed == 1)
@@ -92,63 +85,46 @@ int constructHouse(int k, int propertyIndex)
 
     players[k].money -= properties[propertyIndex].houseConstructionCost;
 
-properties[propertyIndex].houseCount++;
+    properties[propertyIndex].houseCount++;
 
-properties[propertyIndex].buildingCondition[
-    properties[propertyIndex].houseCount - 1
-] = 100;
+    properties[propertyIndex].buildingCondition[properties[propertyIndex].houseCount - 1] = 100;
 
     switch(properties[propertyIndex].houseCount)
     {
         case 1:
-            properties[propertyIndex].currentRent =
-                properties[propertyIndex].currentRent * 2;
+            properties[propertyIndex].currentRent = properties[propertyIndex].currentRent * 2;
 
-            printf("Rent of %s is increased to LKR %d\n",
-                   properties[propertyIndex].name,
-                   properties[propertyIndex].currentRent);
+            printf("Rent of %s is increased to LKR %d\n", properties[propertyIndex].name,properties[propertyIndex].currentRent);
+                    
             break;
 
 
         case 2:
-            properties[propertyIndex].currentRent =
-                properties[propertyIndex].currentRent * 3 / 2;
+            properties[propertyIndex].currentRent = properties[propertyIndex].currentRent * 3 / 2;
 
-            printf("Rent of %s is increased to LKR %d\n",
-                   properties[propertyIndex].name,
-                   properties[propertyIndex].currentRent);
+            printf("Rent of %s is increased to LKR %d\n", properties[propertyIndex].name, properties[propertyIndex].currentRent);
             break;
 
 
         case 3:
-            properties[propertyIndex].currentRent =
-                properties[propertyIndex].currentRent * 5 / 3;
+            properties[propertyIndex].currentRent = properties[propertyIndex].currentRent * 5 / 3;
 
-            printf("Rent of %s is increased to LKR %d\n",
-                   properties[propertyIndex].name,
-                   properties[propertyIndex].currentRent);
+            printf("Rent of %s is increased to LKR %d\n", properties[propertyIndex].name, properties[propertyIndex].currentRent);
             break;
 
 
         case 4:
-            properties[propertyIndex].currentRent =
-                properties[propertyIndex].currentRent * 7 / 5;
+            properties[propertyIndex].currentRent = properties[propertyIndex].currentRent * 7 / 5;
 
-            printf("Rent of %s is increased to LKR %d\n",
-                   properties[propertyIndex].name,
-                   properties[propertyIndex].currentRent);
+            printf("Rent of %s is increased to LKR %d\n", properties[propertyIndex].name, properties[propertyIndex].currentRent);
             break;
     }
 
-    printf("%s constructed one house on %s.\n",
-           players[k].name,
-           properties[propertyIndex].name);
+    printf("%s constructed one house on %s.\n", players[k].name, properties[propertyIndex].name);
 
-    printf("Construction Cost : LKR %d\n",
-           properties[propertyIndex].houseConstructionCost);
+    printf("Construction Cost : LKR %d\n", properties[propertyIndex].houseConstructionCost);
 
-    printf("Houses : %d\n",
-           properties[propertyIndex].houseCount);
+    printf("Houses : %d\n", properties[propertyIndex].houseCount);
 
     return 1;
 }
@@ -182,22 +158,15 @@ int constructHotel(int k, int propertyIndex)
     properties[propertyIndex].hotelCount = 1;
     properties[propertyIndex].buildingCondition[0] = 100;
 
-    properties[propertyIndex].currentRent =
-        properties[propertyIndex].currentRent * 10 / 7;
+    properties[propertyIndex].currentRent = properties[propertyIndex].currentRent * 10 / 7;
 
-    printf("%s constructed a hotel on %s.\n",
-           players[k].name,
-           properties[propertyIndex].name);
+    printf("%s constructed a hotel on %s.\n", players[k].name, properties[propertyIndex].name);
 
-    printf("Construction Cost : LKR %d\n",
-           properties[propertyIndex].hotelConstructionCost);
+    printf("Construction Cost : LKR %d\n", properties[propertyIndex].hotelConstructionCost);
 
-    printf("Hotel Count : %d\n",
-           properties[propertyIndex].hotelCount);
+    printf("Hotel Count : %d\n", properties[propertyIndex].hotelCount);
 
-    printf("Rent of %s is increased to LKR %d\n",
-           properties[propertyIndex].name,
-           properties[propertyIndex].currentRent);
+    printf("Rent of %s is increased to LKR %d\n", properties[propertyIndex].name, properties[propertyIndex].currentRent);
 
     return 1;
 }

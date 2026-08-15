@@ -1,12 +1,12 @@
 #ifndef EVENTS_H
 #define EVENTS_H
 
-void setNewEconomicEventt(void);
-void resetCurrentEconomicEvent(void);
+void setNewEconomicEventt();
+void resetCurrentEconomicEvent();
 void economicEvents(int roundNumber);
 
-void setNewGovernmentRegulations(void);
-void resetCurrentGovernmentRegulations(void);
+void setNewGovernmentRegulations();
+void resetCurrentGovernmentRegulations();
 void governmentRegulations(int roundNumber);
 
 void marketBoom(int PropertyColor);
@@ -24,21 +24,21 @@ void pickEventCard(int playerID);
 void handleEventCard(void);
 void updatePlayerEventCards(int playerID);
 
-void politicalRally(void);
-void stockMarketRise(void);
-void economicDownturn(void);
-void taxAmnesty(void);
-void foreignFunding(void);
-void portExpansion(void);
-void propertyRevaluation(void);
-void governmentGrant(void);
-void nationalDisaster(void);
+void politicalRally();
+void stockMarketRise();
+void economicDownturn();
+void taxAmnesty();
+void foreignFunding();
+void portExpansion();
+void propertyRevaluation();
+void governmentGrant();
+void nationalDisaster();
 
 int getEventCardDuration(int card);
 
-void regionalDevelopmentCards(void);
-void resetCurrentRegionalDevelopmentCards(void);
+void regionalDevelopmentCards();
+void resetCurrentRegionalDevelopmentCards();
 
-void processDisasterRepairs(void);
-
+void processDisasterRepairs();
+void payLuxuryPropertyTax();
 #endif

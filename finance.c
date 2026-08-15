@@ -685,7 +685,7 @@ void communityDevelopmentFund(int playerID)
     tax = totalAssets * 10 / 100;
 
     players[playerID].money -= tax;
-    players[playerID].taxableMoney -= tax;
+    //players[playerID].taxableMoney -= tax;
 
     printf("%s landed on Community Development Fund.\n",players[playerID].name);
 
@@ -1561,6 +1561,10 @@ int purchaseInsurance(int playerID, int propertyIndex, int policyType)
     premium =
         properties[propertyIndex].currentPrice *
         insurance[policyType].installment_percentage / 100;
+    if(gameInfo.currentGovernmentRegulation == 7)
+        {
+            premium = premium * 85 / 100;
+        }
 
     if(players[playerID].money < premium)
     {

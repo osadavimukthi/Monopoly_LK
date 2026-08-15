@@ -89,9 +89,9 @@ struct property
     int disasterRepairCost;
     int insurancePolicyType;
     int insuranceExpiryRound;
+    int undevelopedPurchaseRound;
 
 };
-
 extern struct property properties[22];
 
 
@@ -101,7 +101,6 @@ struct propertyColor{
     int marketBoomRound;
     int marketDeclineRound;
 };
-
 extern struct propertyColor propertyColors[8];
 
 
@@ -192,8 +191,6 @@ struct insuranceCompany{
 extern struct insuranceCompany insuranceCompanies[2];
 
 
-
-
 struct Insurance {
     enum insurancePolicyType insurance_policy;
     int insurancePremium;
@@ -203,6 +200,7 @@ struct Insurance {
 };
 extern struct Insurance insurance[3];
 
+
 struct Bidding{
     int currentBid;
     int highestBidder;
@@ -210,7 +208,6 @@ struct Bidding{
 };
 
 extern struct Bidding bidding;
-
 
 struct gameData {
     int gameRound;
@@ -225,7 +222,6 @@ struct gameData {
     int currentMarketDeclineColor;
     int currentRegionalDevelopmentCard;
 };
-
 extern struct gameData gameInfo;
 
 
@@ -242,7 +238,6 @@ struct monopoly{
     int hasOwner;
     int owner;
 };
-
 extern struct monopoly monopolies[8];
 
 
@@ -251,7 +246,6 @@ struct eventCardData
     int isActive[20];
     int startRound[20];
 };
-
 extern struct eventCardData eventCardData[4];
 
 

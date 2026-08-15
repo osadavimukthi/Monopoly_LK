@@ -10,17 +10,17 @@
 void propertyBuyRent(int playerSquare, int k)
 {
     int l = 0;
-     int averageCondition;
+    int averageCondition;
     int rentPercentage;
     int actualRent;
+    
     while(l < 22)
     {
         if(playerSquare == properties[l].squareNumber)
         {
             if(properties[l].isClosed == 1)
             {
-                printf("%s is currently closed due to Political Rally.\n",
-                       properties[l].name);
+                printf("%s is currently closed due to Political Rally.\n", properties[l].name);
 
                 printf("No property operation can be performed.\n\n");
 
@@ -31,10 +31,24 @@ void propertyBuyRent(int playerSquare, int k)
             {
                 if(playerPurchaseDecision(k, l))
                 {
+                    if(gameInfo.currentGovernmentRegulation == 8 &&
+                    countUndevelopedProperties(k) >= 3)
+                        {
+                            printf("%s cannot purchase %s because of the Anti-Speculation Act.\n",
+                                players[k].name,
+                                properties[l].name);
+
+                            printf("Player already owns three undeveloped properties.\n\n");
+
+                            auctionProperty(l);
+
+                            break;
+                        }
+
                     properties[l].hasOwner = 1;
                     properties[l].owner = players[k].playerID;
                     players[k].money -= properties[l].currentPrice;
-                    players[k].taxableMoney -= properties[l].currentPrice;
+                    //players[k].taxableMoney -= properties[l].currentPrice;
                     players[k].ownedProperties[players[k].ownedPropertiesCount] = properties[l].squareNumber;
                     players[k].ownedPropertiesCount++;
 
@@ -61,51 +75,40 @@ void propertyBuyRent(int playerSquare, int k)
                     int rentPercentage;
                     int actualRent;
 
-                    averageCondition =
-                        calculateAverageBuildingCondition(l);
+                    averageCondition = calculateAverageBuildingCondition(l);
 
-                    rentPercentage =
-                        getConditionRentPercentage(averageCondition);
+                    rentPercentage = getConditionRentPercentage(averageCondition);
 
-                    actualRent =
-                        properties[l].currentRent *
-                        rentPercentage / 100;
+                    actualRent = properties[l].currentRent * rentPercentage / 100;
 
                     if(properties[l].isStructurallyDamaged)
                     {
-                        actualRent =
-                            actualRent * 75 / 100;
+                        actualRent = actualRent * 75 / 100;
                     }
 
                     if(properties[l].isDisasterDamaged)
                     {
                         actualRent = 0;
-
                         printf("Disaster Damage : No rent can be collected.\n");
                     }
 
-                    printf("Average Building Condition : %d%%\n",
-                        averageCondition);
+                    printf("Average Building Condition : %d%%\n", averageCondition);
 
-                    printf("Rent Collection : %d%%\n",
-                        rentPercentage);
+                    printf("Rent Collection : %d%%\n", rentPercentage);
 
                     if(properties[l].isStructurallyDamaged)
                     {
                         printf("Structural Damage : Rent reduced by 25%%\n");
                     }
 
-                    printf("Rent paid : LKR %d.\n",
-                        actualRent);
+                    printf("Rent paid : LKR %d.\n", actualRent);
 
-                    printf("Owner : %s.\n\n",
-                        players[properties[l].owner].name);
+                    printf("Owner : %s.\n\n", players[properties[l].owner].name);
 
                     players[k].money -= actualRent;
-                    players[k].taxableMoney -= actualRent;
 
-                    players[properties[l].owner].money += actualRent;
-
+players[properties[l].owner].money += actualRent;
+players[properties[l].owner].taxableMoney += actualRent;
                     
                 }
                 else
@@ -124,7 +127,6 @@ void propertyBuyRent(int playerSquare, int k)
 void railwayBuyRent(int playerSquare, int k)
 {
     int l = 0;
-
     while(l < 4)
     {
         if(playerSquare == railways[l].squareNumber)
@@ -137,7 +139,7 @@ void railwayBuyRent(int playerSquare, int k)
                     railways[l].owner = players[k].playerID;
 
                     players[k].money -= railways[l].currentPrice;
-                    players[k].taxableMoney -= railways[l].currentPrice;
+                    //players[k].taxableMoney -= railways[l].currentPrice;
 
                     players[k].ownedRailways[players[k].ownedRailwayCount] =railways[l].squareNumber;
                     players[k].ownedRailwayCount++;
@@ -154,10 +156,17 @@ void railwayBuyRent(int playerSquare, int k)
                             {
                                 railways[i].currentRent = 250;
 
+                                if(gameInfo.currentGovernmentRegulation == 5)
+                                {
+                                    railways[i].currentRent =
+                                        railways[i].currentRent * 125 / 100;
+                                }
+
                                 printf("Base rent of %s is LKR %d \n\n",railways[i].name,railways[i].currentRent);
                             }
                         }
                     }
+
                     else if(players[k].ownedRailwayCount == 2)
                     {
                         printf("%s owns 2 railways! \n\n",players[k].name);
@@ -168,12 +177,19 @@ void railwayBuyRent(int playerSquare, int k)
                             {
                                 railways[i].currentRent = 500;
 
+                                if(gameInfo.currentGovernmentRegulation == 5)
+                                {
+                                    railways[i].currentRent =
+                                        railways[i].currentRent * 125 / 100;
+                                }
+
                                 printf("Base rent of %s is LKR %d \n",railways[i].name,railways[i].currentRent);
                             }
                         }
 
                         printf("\n");
                     }
+
                     else if(players[k].ownedRailwayCount == 3)
                     {
                         printf("%s owns 3 railways! \n\n",players[k].name);
@@ -182,7 +198,13 @@ void railwayBuyRent(int playerSquare, int k)
                         {
                             if(railways[i].owner == players[k].playerID)
                             {
-                                railways[i].currentRent = 1000;
+                               railways[i].currentRent = 1000;
+
+                                if(gameInfo.currentGovernmentRegulation == 5)
+                                {
+                                    railways[i].currentRent =
+                                        railways[i].currentRent * 125 / 100;
+                                }
 
                                 printf("Base rent of %s is LKR %d \n", railways[i].name, railways[i].currentRent);
                             }
@@ -190,6 +212,7 @@ void railwayBuyRent(int playerSquare, int k)
 
                         printf("\n");
                     }
+
                     else if(players[k].ownedRailwayCount == 4)
                     {
                         printf("%s owns all 4 railways! \n\n", players[k].name);
@@ -199,6 +222,12 @@ void railwayBuyRent(int playerSquare, int k)
                             if(railways[i].owner == players[k].playerID)
                             {
                                 railways[i].currentRent = 2000;
+                                
+                                if(gameInfo.currentGovernmentRegulation == 5)
+                                {
+                                    railways[i].currentRent =
+                                        railways[i].currentRent * 125 / 100;
+                                }
 
                                 printf("Base rent of %s is LKR %d \n", railways[i].name, railways[i].currentRent);
                             }
@@ -212,6 +241,7 @@ void railwayBuyRent(int playerSquare, int k)
                     printf("%s declined to purchase %s.\n\n", players[k].name, railways[l].name);
                 }
             }
+
             else
             {
                 if(railways[l].owner != players[k].playerID)
@@ -225,9 +255,10 @@ void railwayBuyRent(int playerSquare, int k)
                     printf("Owner : %s \n\n",players[railways[l].owner].name);
 
                     players[k].money -= railways[l].currentRent;
-                    players[k].taxableMoney -= railways[l].currentRent;
+                    //players[k].taxableMoney -= railways[l].currentRent;
 
-                    players[railways[l].owner].money += railways[l].currentRent;
+players[railways[l].owner].money += railways[l].currentRent;
+players[railways[l].owner].taxableMoney += railways[l].currentRent;
                 }
                 else
                 {
@@ -258,7 +289,7 @@ void utilityBuyRent(int playerSquare, int k)
                     utilities[l].owner = players[k].playerID;
 
                     players[k].money -= utilities[l].currentPrice;
-                    players[k].taxableMoney -= utilities[l].currentPrice;
+                   // players[k].taxableMoney -= utilities[l].currentPrice;
 
                     players[k].ownedUtilities[players[k].ownedUtilitiesCount] = utilities[l].squareNumber;
                     players[k].ownedUtilitiesCount++;
@@ -280,6 +311,11 @@ void utilityBuyRent(int playerSquare, int k)
                 {
                     utilities[l].currentRent = 4 * (players[k].lastRoll1 + players[k].lastRoll2);
                 }
+                if(gameInfo.currentGovernmentRegulation == 6)
+                {
+                    utilities[l].currentRent =
+                    utilities[l].currentRent * 120 / 100;
+                }
 
                 if(utilities[l].owner != players[k].playerID)
                 {
@@ -291,10 +327,10 @@ void utilityBuyRent(int playerSquare, int k)
 
                     printf("Owner : %s \n\n",players[utilities[l].owner].name);
 
-                    players[k].money -= utilities[l].currentRent;
-                    players[k].taxableMoney -= utilities[l].currentRent;
+                   players[k].money -= utilities[l].currentRent;
 
-                    players[utilities[l].owner].money +=utilities[l].currentRent;
+players[utilities[l].owner].money += utilities[l].currentRent;
+players[utilities[l].owner].taxableMoney += utilities[l].currentRent;
                 }
                 else
                 {
@@ -309,6 +345,7 @@ void utilityBuyRent(int playerSquare, int k)
     }
 }
 
+//assuemed that income tax affected only for railway , utility and property rent and money each passing go and money earning through events
 void payTax(int playerSquare ,int k)
 {   
     if(playerSquare == 4)
