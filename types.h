@@ -90,7 +90,6 @@ struct property
     int insurancePolicyType;
     int insuranceExpiryRound;
     int undevelopedPurchaseRound;
-
 };
 extern struct property properties[22];
 
@@ -142,6 +141,9 @@ struct player
     int currentLoan;
     int loanRound;
     int loanInterestRate;
+    int paymentDebt[40];
+    int luxuryPropertyTaxDebt;
+    int luxuryPropertyTaxDue;
 };
 extern struct player players[4];
 
@@ -160,6 +162,7 @@ struct railway {
     int isMortgaged;
     int isLoanLocked;
     int netWorth;
+    int auctionStartingPrice;
 
 };
 extern struct railway railways[4];
@@ -178,6 +181,7 @@ struct utility {
     int isLoanLocked;
     int baseRent;
     int currentRent;
+    int auctionStartingPrice;
 
 };
 extern struct utility utilities[2];
@@ -221,6 +225,17 @@ struct gameData {
     int previousMarketDeclineColor;
     int currentMarketDeclineColor;
     int currentRegionalDevelopmentCard;
+    int eventCard5Active;
+    int eventCard5StartRound;
+    int eventCard6Active;
+    int eventCard6StartRound;
+    int eventCard12Active;
+    int eventCard12StartRound;
+    int eventCard13Active;
+    int eventCard13StartRound;
+    int eventCard17Active;
+    int eventCard17StartRound;
+    int eventCard17Group;
 };
 extern struct gameData gameInfo;
 

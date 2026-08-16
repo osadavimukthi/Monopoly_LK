@@ -5,9 +5,6 @@
 #include "types.h"
 #include "players.h"
 #include "board.h"
-#include "buyandrent.h"
-#include "buildings.h"
-#include "inflation.h"
 #include "events.h"
 #include "finance.h"
 
@@ -98,6 +95,60 @@ void endGame()
     printf("============================================\n\n");
 }
 
+void displayRoundSummary(int roundNumber)
+{
+    int i;
+    int hotelCount;
+
+    printf("\n");
+    printf("=============================================\n");
+    printf("           Round %d Summary\n", roundNumber);
+    printf("=============================================\n");
+
+    for(i = 0; i < 4; i++)
+    {
+        hotelCount = 0;
+
+        for(int j = 0; j < players[i].ownedPropertiesCount; j++)
+        {
+            int propertyIndex = -1;
+
+            for(int k = 0; k < 22; k++)
+            {
+                if(properties[k].squareNumber == players[i].ownedProperties[j])
+                {
+                    propertyIndex = k;
+                    break;
+                }
+            }
+
+            if(propertyIndex != -1)
+            {
+                hotelCount += properties[propertyIndex].hotelCount;
+            }
+        }
+
+        printf("%s\n", players[i].name);
+        printf("Cash : LKR %d\n", players[i].money);
+        printf("Net Worth : LKR %d\n", calculateNetWorth(i));
+        printf("Properties : %d\n", players[i].ownedPropertiesCount);
+        printf("Hotels : %d\n", hotelCount);
+
+        if(players[i].currentLoan > 0)
+        {
+            printf("Outstanding Loan : LKR %d\n", players[i].currentLoan);
+        }
+        else
+        {
+            printf("Outstanding Loan : None\n");
+        }
+
+        printf("---------------------------------------------\n");
+    }
+
+    printf("=============================================\n");
+}
+
 void startingMessage()
 {
     printf("MONOPOLY-LK Simulation\n\n");
@@ -113,118 +164,143 @@ int rollDice()
     return rand() % 6 + 1;
 }
 
-void setPlayOrder()
-{
-    
-    int playerRolls[4];
-    int remaining[4] = {1, 1, 1, 1};
-    int i;
+void setPlayOrder() 
+{ 
+    int playerRolls[4]; 
+    int remaining[4] = {1, 1, 1, 1}; 
+    int i; 
     int j;
-    int highestRoll;
-    int highestCount;
-    int priority = 1;
+    int highestRoll; 
+    int highestCount; 
+    int priority = 1; 
+ 
+    for(i = 0; i < 4; i++) 
+    { 
+        playerRolls[i] = rollDice() + rollDice(); 
+    } 
+ 
+    printf("Aggressive Investor rolls %d.\n", playerRolls[0]); 
+    printf("Conservative Banker rolls %d.\n", playerRolls[1]); 
+    printf("Risk Taker rolls %d.\n", playerRolls[2]); 
+    printf("Opportunistic Trader rolls %d.\n\n", playerRolls[3]); 
+ 
+    while(priority <= 4) 
+    { 
+        highestRoll = -1; 
+ 
+        for(i = 0; i < 4; i++) 
+        { 
+            if(remaining[i] == 1 && playerRolls[i] > highestRoll) 
+            { 
+                highestRoll = playerRolls[i]; 
+            } 
+        } 
+ 
+        highestCount = 0; 
+ 
+        for(i = 0; i < 4; i++) 
+        { 
+            if(remaining[i] == 1 && playerRolls[i] == highestRoll) 
+            { 
+                highestCount++; 
+            } 
+        } 
+ 
+        if(highestCount == 1) 
+        { 
+            for(i = 0; i < 4; i++) 
+            { 
+                if(remaining[i] == 1 && playerRolls[i] == highestRoll) 
+                { 
+                    players[i].priority = priority; 
+                    remaining[i] = 0; 
+ 
+                    printf("%s gets priority %d.\n", players[i].name, priority); 
+ 
+                    priority++; 
+                    break; 
+                } 
+            } 
+        } 
+ 
+        else 
+        { 
+            printf("Tie for highest roll. Rerolling tied players.\n"); 
+ 
+            for(i = 0; i < 4; i++) 
+            { 
+                if(remaining[i] == 1 && playerRolls[i] == highestRoll) 
+                { 
+                    playerRolls[i] = rollDice() + rollDice(); 
+ 
+                    printf("%s rerolls %d.\n", players[i].name, playerRolls[i]); 
+                } 
+            } 
+ 
+            printf("\n"); 
+        } 
+    } 
+ 
+    for(i = 0; i < 4; i++) 
+    { 
+        if(players[i].priority == 1) 
+        { 
+            printf("%s will begin the game.\n\n", players[i].name); 
+            break; 
+        } 
+    } 
+ 
+    printf("Turn order:\n"); 
+ 
+    for(j = 1; j <= 4; j++) 
+    { 
+        for(i = 0; i < 4; i++) 
+        { 
+            if(players[i].priority == j) 
+            { 
+                printf("%d. %s\n", j, players[i].name); 
+                break; 
+            } 
+        } 
+    } 
+ 
+    printf("\n"); 
+}
 
-    for(i = 0; i < 4; i++)
+int countSolventPlayers()
+{
+    int count = 0;
+
+    for(int i = 0; i < 4; i++)
     {
-        playerRolls[i] = rollDice() + rollDice();
+        if(!players[i].isBankrupt)
+        {
+            count++;
+        }
     }
 
-    printf("Aggresive Investor rolls %d\n", playerRolls[0]);
-    printf("Conservative Banker rolls %d\n", playerRolls[1]);
-    printf("Risk Taker rolls %d\n", playerRolls[2]);
-    printf("Opportunistic Trader rolls %d\n", playerRolls[3]);
-
-    while(priority <= 4)
-    {
-        highestRoll = -1;
-
-        for(i = 0; i < 4; i++)
-        {
-            if(remaining[i] == 1)
-            {
-                if(playerRolls[i] > highestRoll)
-                {
-                    highestRoll = playerRolls[i];
-                }
-            }
-        }
-
-        highestCount = 0;
-
-        for(i = 0; i < 4; i++)
-        {
-            if(remaining[i] == 1 && playerRolls[i] == highestRoll)
-            {
-                highestCount++;
-            }
-        }
-
-        if(highestCount == 1)
-        {
-            for(i = 0; i < 4; i++)
-            {
-                if(remaining[i] == 1 && playerRolls[i] == highestRoll)
-                {
-                    players[i].priority = priority;  
-                    remaining[i] = 0;
-
-                    printf("%s gets priority %d\n",players[i].name, priority);
-                    priority++;
-                    break;
-                }
-            }
-        }
-
-        else
-        {
-            printf("Tie for highest roll. Rerolling tied players.\n");
-
-            for(i = 0; i < 4; i++)
-            {
-                if(remaining[i] == 1 && playerRolls[i] == highestRoll)
-                {
-                    playerRolls[i] = rollDice() + rollDice();
-
-                    printf("%s rerolls %d\n",players[i].name, playerRolls[i]);
-                }
-            }
-        }
-    }
-
-    printf("\nTurn order:\n");
-
-    priority = 1;
-
-    while(priority <= 4)
-    {
-        for(i = 0; i < 4; i++)
-        {
-            if(players[i].priority == priority)
-            {
-                printf("%s\n", players[i].name);
-                break;
-            }
-        }
-
-        priority++;
-    }
+    return count;
 }
 
 void playGame()
-{
+{   
+    
     gameInfo.gameRound = 0;
     gameInfo.bankruptedPlayerCount = 0;
     initializeEventCards();
+
+    int gameOver = 0;
 
     printf("\n*******************************\n");
     printf("Game Round %d Starts\n", gameInfo.gameRound + 1);
     printf("*******************************\n\n");
 
-    while(gameInfo.gameRound < FULLROUNDS)
+
+    while(gameInfo.gameRound < FULLROUNDS && !gameOver)
     {
-        for(int ongoingPlayer = 1; ongoingPlayer <= 4; ongoingPlayer++)
+        for(int ongoingPlayer = 1; ongoingPlayer <= 4 && !gameOver; ongoingPlayer++)
         {
-            for(int k = 0; k < 4; k++)
+            for(int k = 0; k < 4 && !gameOver; k++)
             {
                 if(!players[k].isBankrupt)
                 {
@@ -248,27 +324,29 @@ void playGame()
                                 printf("%s goes fourth\n", players[k].name);
                                 break;
                         }
-                        
-                        maintainBuildings(k);
-                        
+
+
                         players[k].lastRoll1 = rollDice();
                         players[k].lastRoll2 = rollDice();
 
                         int diceTotal = players[k].lastRoll1 + players[k].lastRoll2;
 
-                        printf("%s rolled %d\n",players[k].name,diceTotal);
+                        printf("%s rolled %d\n", players[k].name, diceTotal);
 
                         players[k].playerTurn++;
-
+                        
+                        payLuxuryPropertyTaxDebt(k);
+                        
                         if(players[k].isInJail)
                         {
                             outOfJail(players[k].currentPosition, k);
                         }
-
-                        
                         else
-                        {
-                            players[k].oldPosition =players[k].currentPosition;
+                        {   
+                            maintainBuildings(k);
+
+                            players[k].oldPosition =  players[k].currentPosition;
+
                             players[k].currentPosition += diceTotal;
 
                             if(players[k].currentPosition >= 40)
@@ -280,99 +358,109 @@ void playGame()
 
                                 players[k].playerRound++;
 
-                                printf("%s passed GO and collects LKR 2000\n",players[k].name);
+                                printf("\n%s passed GO.\n", players[k].name);
+                                printf("%s receives LKR 2000.\n", players[k].name);
+                                printf("Current Balance : LKR %d\n\n", players[k].money);
 
                                 updatePlayerEventCards(k);
                             }
 
-                            printf("%s moves from %d to %d\n",players[k].name,players[k].oldPosition,players[k].currentPosition);
+                            printf("%s moves from %d to %d\n", players[k].name, players[k].oldPosition, players[k].currentPosition);
 
-                            printf("Player Turn  : %d\n",players[k].playerTurn);
+                            printf("Player Turn  : %d\n", players[k].playerTurn);
 
-                            printf("Player Round : %d\n\n",players[k].playerRound);
+                            printf("Player Round : %d\n\n", players[k].playerRound);
 
-
-                            gotoJail(players[k].currentPosition, k);
-
+                            
                             if(!players[k].isInJail)
                             {
+                                switch(board[players[k].currentPosition].type)
                                 {
-                                    switch(board[players[k].currentPosition].type)
-                                    {
-                                        case Start:
-                                            printf("%s landed on GO.\n\n", players[k].name);
-                                            break;
+                                    case Start:
+                                        printf("%s landed on GO.\n\n", players[k].name);
+                                        break;
 
-                                        case Property:
-                                            propertyBuyRent(players[k].currentPosition, k);
-                                            break;
+                                    case Property:
+                                        propertyBuyRent( players[k].currentPosition, k);
+                                        break;
 
-                                        case Railway:
-                                            railwayBuyRent(players[k].currentPosition, k);
-                                            break;
+                                    case Railway:
+                                        railwayBuyRent( players[k].currentPosition, k);
+                                        break;
 
-                                        case Utility:
-                                            utilityBuyRent(players[k].currentPosition, k);
-                                            break;
+                                    case Utility:
+                                        utilityBuyRent( players[k].currentPosition, k);
+                                        break;
 
-                                        case Tax:
-                                            payTax(players[k].currentPosition, k);
-                                            break;
+                                    case Tax:
+                                        payTax( players[k].currentPosition, k);
+                                        break;
 
-                                        case CommunityFund:
-                                            communityDevelopmentFund(k);
-                                            break;
-                                        
-                                        case Insurance:
-                                            printf("%s landed on an Insurance Company.\n\n", players[k].name);
-                                            manageInsurance(k);
+                                    case CommunityFund:
+                                        communityDevelopmentFund(k);
+                                        break;
 
-                                            break;
-                                        
+                                    case Insurance:
+                                        printf( "%s landed on an Insurance Company.\n\n", players[k].name);
+                                        manageInsurance(k);
+                                        break;
 
-                                        case Event:
-                                            printf("%s landed on an Event square.\n\n", players[k].name);
-                                            pickEventCard(k);
-                                            break;
+                                    case Event:
+                                        printf( "%s landed on an Event square.\n\n", players[k].name);
+                                        pickEventCard(k);
+                                        break;
 
-                                        case Bank:
-                                            printf("%s landed on Bank of Ceylon.\n\n",players[k].name);
-                                            manageLoan(k);
-                                            break;
+                                    case Bank:
+                                        printf( "%s landed on Bank of Ceylon.\n\n", players[k].name);
 
-                                        case Jail:
-                                            printf("%s is visiting Jail.\n\n", players[k].name);
-                                            break;
+                                        manageLoan(k);
+                                        break;
 
-                                        case FreeParking:
-                                            printf("%s landed on Free Parking.\n\n", players[k].name);
-                                            break;
+                                    case Jail:
+                                        printf( "%s is visiting Jail.\n\n", players[k].name);
+                                        break;
 
-                                        case GoToJail:
-                                            /* Already handled by gotoJail() above */
-                                            break;
-                                    }
+                                    case FreeParking:
+                                        printf( "%s landed on Free Parking.\n\n", players[k].name);
+                                        break;
+
+                                    case GoToJail:
+                                        gotoJail(players[k].currentPosition, k);
+                                        break;
                                 }
                             }
-                            renovateProperty(players[k].currentPosition, k);
+                            repairDisasterDamagedProperties(k);
+                            renovateProperty( players[k].currentPosition,k);
+
                             for(int i = 0; i < 22; i++)
                             {
                                 if(properties[i].squareNumber == players[k].currentPosition)
                                 {
-                                    checkMonopoly(k, properties[i].colorGroup);
+                                    checkMonopoly( k, properties[i].colorGroup);
                                     break;
                                 }
                             }
+
                             printf("\n--- %s Construction ---\n", players[k].name);
 
                             playerConstruction(k);
-                            playerBankrupt(k, &gameInfo.bankruptedPlayerCount);
+
+                            playerBankrupt( k,&gameInfo.bankruptedPlayerCount);
+
+                            if(countSolventPlayers() == 1)
+                            {
+                                gameOver = 1;
+                            }
                         }
                     }
                 }
             }
         }
 
+        if(gameOver)
+        {
+            break;
+        }
 
         int completed = 1;
 
@@ -397,6 +485,7 @@ void playGame()
             updatePropertyDepreciation();
             updateBuildingCondition();
             updateMaintenanceDamage();
+            updateAntiSpeculationAct();
 
             if(gameInfo.gameRound != 0 && gameInfo.gameRound % 15 == 0)
             {
@@ -416,6 +505,7 @@ void playGame()
                     }
                 }
             }
+
             updateMarketRounds(gameInfo.gameRound);
             inflation(gameInfo.gameRound);
             economicEvents(gameInfo.gameRound);
@@ -423,30 +513,35 @@ void playGame()
             dynamicPropertyMarkrt(gameInfo.gameRound);
             handleEventCard();
 
-            /* Disaster happens before insurance expiry */
             if(gameInfo.gameRound % 10 == 0)
             {
-                nationalDisaster();
+                happenDisaster();
+                nationalDisaster(-1);
+                
             }
 
-            /* Automatically repair damaged properties */
             processDisasterRepairs();
 
-            /* Check insurance warnings and expiry */
             updateInsurancePolicies();
-            
 
             if(gameInfo.currentGovernmentRegulation == 4)
             {
                 payLuxuryPropertyTax();
             }
+            displayRoundSummary(gameInfo.gameRound);
             printf("\n\n");
 
             printf("=========================================\n");
             printf("Game Round %d Completed\n", gameInfo.gameRound);
             printf("=========================================\n\n");
 
-            if(gameInfo.gameRound < FULLROUNDS)
+
+            if(countSolventPlayers() == 1)
+            {
+                gameOver = 1;
+            }
+
+            if(gameInfo.gameRound < FULLROUNDS && !gameOver)
             {
                 printf("\n*******************************\n");
                 printf("Game Round %d Starts\n", gameInfo.gameRound + 1);
@@ -461,7 +556,8 @@ void playGame()
 
 
 void startGame()
-{
+{   
+    srand(time(NULL));
     startingMessage();
     setPlayOrder();
     playGame();
